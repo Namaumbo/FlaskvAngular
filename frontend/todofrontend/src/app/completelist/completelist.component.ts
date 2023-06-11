@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TodoserviceService } from '../services/todoservice.service';
 
 @Component({
   selector: 'app-completelist',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class CompletelistComponent {
 
+  constructor(public todo : TodoserviceService){
+
+  }
+  
 }

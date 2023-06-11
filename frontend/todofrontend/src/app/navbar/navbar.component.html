@@ -1,1 +1,24 @@
-<p>navbar works!</p>
+<div class="container mx-auto">
+  <nav >
+    <ul>
+      <div>
+        <li class="nav_link">
+            <a routerLink="/completed">completed</a>
+        </li>
+        <li class="nav_link">
+            <a routerLink="/uncompleted/">uncompleted</a>
+        </li>
+        <li class="nav_link">
+           <a routerLink="/home">all</a>
+        </li>
+      </div>
+      <div>
+        <li >
+            <a routerLink="/logout" (click)="handleLogOut()">Me</a>
+        </li>
+      </div>
+    </ul>
+
+    
+  </nav>
+</div>

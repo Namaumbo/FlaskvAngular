@@ -1,1 +1,8 @@
-<app-login></app-login>
+<div *ngIf="!this.user.isLoggedIn() else block">
+  <app-login></app-login>
+</div>
+
+<ng-template #block>
+  <app-navbar></app-navbar>
+  <router-outlet></router-outlet>
+</ng-template>

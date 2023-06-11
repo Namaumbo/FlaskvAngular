@@ -1,1 +1,10 @@
-<p>home works!</p>
+<div class="container mx-auto">
+    <ul>
+        <li *ngFor="let i of this.todo.getUserData()">
+            <span [ngClass]="{ completed: i['completed'] }">
+                {{i['title']}}
+            </span>
+        </li>
+    </ul>
+
+</div>

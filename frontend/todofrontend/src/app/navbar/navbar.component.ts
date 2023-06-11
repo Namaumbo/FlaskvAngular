@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { UserService } from '../services/user.service';
+import { TodoserviceService } from '../services/todoservice.service';
 
 @Component({
   selector: 'app-navbar',
@@ -6,5 +8,16 @@ import { Component } from '@angular/core';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
+
+  handleLogOut() {
+    // this.user.isLoggedIn()
+    localStorage.setItem('token','')
+    this.todo.setUserData('')
+    
+  }
+  constructor(public user: UserService,public todo : TodoserviceService) {
+
+  }
+
 
 }

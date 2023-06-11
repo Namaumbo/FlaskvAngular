@@ -1,0 +1,17 @@
+nav{
+    background-color: rgba(175, 253, 227, 0.73);
+    padding: 10px;
+    height: 50px;
+    border: 1px solid rgba(175, 253, 227, 0.73);
+    border-radius: 5px;
+    ul{
+        display: flex;
+        justify-content: space-around;
+        color: black
+    }
+}
+.nav_link{
+    display: inline;
+    margin-left: 20px;
+}
+

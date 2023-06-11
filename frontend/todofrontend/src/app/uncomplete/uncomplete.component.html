@@ -1,1 +1,10 @@
-<p>uncomplete works!</p>
+<div>
+    <ul>
+      <li *ngFor="let i of this.todo.getUserData()">
+        <span *ngIf="!i['completed']">
+          {{ i["title"] }}
+        </span>
+      </li>
+    </ul>
+  </div>
+  

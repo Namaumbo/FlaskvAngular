@@ -1,25 +1,27 @@
 import random
 import string
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import json
 import jwt
 
 # from utils.encode_auth_token import encode_auth_token
 
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY'] = 'zxcvbnm8870dfgytrer.rt_wer_45er***'
 
 
 # login -- done
 # getTodo for a specific user --done
 # add todo for specific user-- done
+# delete todo for a specific user--done
 
-# delete todo for a specific user
 # update to do for a specific user
 
 
 # login
-@app.route('/login', methods=['GET'])
+@app.route('/api/v1/login', methods=['POST'])
 def login():
     #
     # open the user.json/ --done
@@ -31,10 +33,11 @@ def login():
     user_found = {}
     code = None
     message = ''
-    header = {'Content-Type': 'application/json'}
+    header = {'content-type': 'application/json'}
     status = ''
     username = ''
     password = ''
+    print(request.get_json())
 
     if ("password" in request.get_json()) and ("username" in request.get_json()):
 
@@ -71,7 +74,7 @@ def login():
 
 # getting to do for a specific user
 
-@app.route('/get_user_list', methods=['GET'])
+@app.route('/api/v1/get_user_list', methods=['GET'])
 def get_user_todo_list():
 
     # check incoming request headers -- done
@@ -124,7 +127,7 @@ def get_user_todo_list():
 #  add  to do for a user
 
 
-@app.route('/add-todo', methods=['POST'])
+@app.route('/api/v1/add-todo', methods=['POST'])
 def add_to_do():
 
     #  listen to incoming request to get headers--done
@@ -183,7 +186,7 @@ def add_to_do():
 # deleting an item for a specific user
 
 
-@app.route('/delete-todo/<item_id>', methods=['DELETE'])
+@app.route('/api/v1/delete-todo/<item_id>', methods=['DELETE'])
 def delete_todo(item_id):
     # listen to the incoming request
     # check out the headers
