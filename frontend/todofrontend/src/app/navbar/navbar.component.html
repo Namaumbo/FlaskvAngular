@@ -3,18 +3,18 @@
     <ul>
       <div>
         <li class="nav_link">
-            <a routerLink="/completed">completed</a>
+            <a routerLink="/completed" routerLinkActive="active">completed</a>
         </li>
         <li class="nav_link">
-            <a routerLink="/uncompleted/">uncompleted</a>
+            <a routerLink="/uncompleted/" routerLinkActive="active">uncompleted</a>
         </li>
         <li class="nav_link">
-           <a routerLink="/home">all</a>
+           <a routerLink="/home" routerLinkActive="active">all</a>
         </li>
       </div>
       <div>
         <li >
-            <a routerLink="/logout" (click)="handleLogOut()">Me</a>
+            <a routerLink="/logout" (click)="handleLogOut()" class="logout">{{this.user.getUserName()}} | Logout</a>
         </li>
       </div>
     </ul>

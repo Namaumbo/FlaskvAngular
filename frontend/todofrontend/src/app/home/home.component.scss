@@ -2,3 +2,30 @@
     text-decoration: line-through;
  
 }
+li{
+    display: flex;
+    justify-content: space-between;
+}
+ul{
+    padding-left: 15em;
+    padding-right: 15em;
+}
+button:nth-child(1){
+    margin-right: 10px;
+}
+button{
+    margin-bottom: 4px;
+}
+.inp{
+border: 1px solid grey;
+width: 50em;
+}
+.wrapper{
+    margin-left: 15em;
+}
+.condition{
+    span{
+        margin-left:35em;
+       color: grey;
+    }
+}

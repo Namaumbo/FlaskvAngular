@@ -12,6 +12,7 @@ export class LoginComponent {
 
   public userName: string = ''
   public password: string = ''
+  public err: string = ''
   public userCredentials: any = {
     username: '',
     password: ''
@@ -25,7 +26,14 @@ export class LoginComponent {
       password: this.password
     }
     if (this.password && this.userName) {
-      this.user.userLogin(this.userCredentials)
+      this.user.userLogin(this.userCredentials).subscribe({
+        next: (res) => {
+          this.user.setUserName(res.user.name)
+        }, error: (err) => {
+
+          this.err = err.error.message
+        }
+      })
     }
 
   }

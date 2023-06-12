@@ -1,6 +1,7 @@
 nav{
     background-color: rgba(175, 253, 227, 0.73);
     padding: 10px;
+    margin-bottom: 20px;
     height: 50px;
     border: 1px solid rgba(175, 253, 227, 0.73);
     border-radius: 5px;
@@ -15,3 +16,9 @@ nav{
     margin-left: 20px;
 }
 
+.active{
+    border-bottom: 3px solid rgb(25, 1, 48);
+}
+.logout{
+text-decoration: underline;
+}

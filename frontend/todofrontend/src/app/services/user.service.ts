@@ -13,10 +13,20 @@ export class UserService {
 
   public userResObject : any = {}
 
+
+
+  userName = ''
   constructor(private HttpClient: HttpClient, public router: Router) { 
   }
 
-  userLogin(userDetails : any): {}{
+  getUserName(){
+    return this.userName;
+  }
+  setUserName(username : string){
+    this.userName = username
+  }
+
+  userLogin(userDetails : any){
     let userAuth =  `${this.urlPrefix}/login`
     this.userResObject = {}
     return this.HttpClient.post<any>(userAuth,userDetails).pipe(
@@ -26,10 +36,6 @@ export class UserService {
 
       })
     )
-    .subscribe((res)=>{
-      this.userResObject = res
-      console.log(this.userResObject)
-    })
   }
 
   isLoggedIn(): boolean {

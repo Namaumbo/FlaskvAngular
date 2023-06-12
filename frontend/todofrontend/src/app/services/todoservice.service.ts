@@ -7,28 +7,59 @@ import { Injectable } from '@angular/core';
 export class TodoserviceService {
 
   urlPrefix = 'http://127.0.0.1:5000/api/v1'
-  constructor(public HttpClient : HttpClient) { }
+  constructor(public HttpClient: HttpClient) { }
 
   userData = [];
 
 
-  setUserData(data : any){
+  setUserData(data: any) {
     this.userData = data
   }
-  getUserData(){
+  getUserData() {
     return this.userData
   }
-  getUserList(){
-    let userList =  `${this.urlPrefix}/get_user_list`
+  getUserList() {
+    let userList = `${this.urlPrefix}/get_user_list`
 
     const token = localStorage.getItem('token')
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
+    return this.HttpClient.get<any>(userList, { headers: headers })
+  }
+  addTodoToUser(title: string) {
+    let apiUrl = `${this.urlPrefix}/add-todo`
+    const token = localStorage.getItem('token')
+    let body = {
+      "title": title
+    }
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+    return this.HttpClient.post<any>(apiUrl, body, { headers: headers })
+  }
 
+  deleteATodo(id: string | number) {
+    let apiUrl = `${this.urlPrefix}/delete-todo/${id}`
+    const token = localStorage.getItem('token')
 
-    return this.HttpClient.get<any>(userList,{headers:headers})
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+    return this.HttpClient.delete<any>(apiUrl)
+  }
+
+  completeAToDo(id : string){
+    let apiUrl = `${this.urlPrefix}/complete-todo/${id}`
+    const token = localStorage.getItem('token')
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+    return this.HttpClient.put<any>(apiUrl,'',{ headers: headers })
 
 
   }
