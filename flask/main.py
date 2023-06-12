@@ -36,7 +36,7 @@ def login():
     status = ''
     username = ''
     password = ''
-    print(request.get_json())
+
 
     if ("password" in request.get_json()) and ("username" in request.get_json()):
 
@@ -217,8 +217,6 @@ def delete_todo(item_id):
             message = 'item deleted successfully'
             code = 200
             status = 'success'
-
-
             return jsonify({'message': message, 'code': code, 'status': status,'item':new_data}), code
 
     else:

@@ -44,8 +44,10 @@ export class HomeComponent {
   }
   ngOnInit() {
     this.todo.getUserList().subscribe( {
+    
       next:res =>{
-        this.todo.setUserData(res.todos)
+        this.todo.setUserData(res.todos) 
+        
       },
       error: err =>{
         this.noItem = err.error.message

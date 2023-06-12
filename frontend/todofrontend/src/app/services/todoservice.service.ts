@@ -41,7 +41,7 @@ export class TodoserviceService {
     return this.HttpClient.post<any>(apiUrl, body, { headers: headers })
   }
 
-  deleteATodo(id: string | number) {
+  deleteATodo(id: string ) {
     let apiUrl = `${this.urlPrefix}/delete-todo/${id}`
     const token = localStorage.getItem('token')
 
@@ -49,17 +49,17 @@ export class TodoserviceService {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
-    return this.HttpClient.delete<any>(apiUrl)
+    return this.HttpClient.delete<any>(apiUrl, { headers: headers })
   }
 
-  completeAToDo(id : string){
+  completeAToDo(id: string) {
     let apiUrl = `${this.urlPrefix}/complete-todo/${id}`
     const token = localStorage.getItem('token')
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
     });
-    return this.HttpClient.put<any>(apiUrl,'',{ headers: headers })
+    return this.HttpClient.put<any>(apiUrl, '', { headers: headers })
 
 
   }

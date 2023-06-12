@@ -32,7 +32,7 @@ export class UserService {
     return this.HttpClient.post<any>(userAuth,userDetails).pipe(
       tap((response)=>{
         localStorage.setItem('token',response.token)
-        this.router.navigate([``])
+        this.router.navigate(['/home'])
 
       })
     )

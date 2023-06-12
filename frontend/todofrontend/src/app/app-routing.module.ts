@@ -4,26 +4,32 @@ import { LoginComponent } from './login/login.component';
 import { CompletelistComponent } from './completelist/completelist.component';
 import { UncompleteComponent } from './uncomplete/uncomplete.component';
 import { HomeComponent } from './home/home.component';
+import { AuthGuard } from './guards/auth.guard';
 
 const routes: Routes = [
-  { 
-    path : '',
-    component : HomeComponent
-},{
-  path:'completed',
-  component : CompletelistComponent
+  {
+    path: '',
+    component: HomeComponent
+  },
+  {
+    path: 'completed',
+    component: CompletelistComponent,
+    canActivate:[AuthGuard]
 
-  },{
-    path:'uncompleted',
-    component: UncompleteComponent
+  }, {
+    path: 'uncompleted',
+    component: UncompleteComponent,
+    canActivate:[AuthGuard]
   },
   {
-    path:'home',
-    component:HomeComponent
+    path: 'home',
+    component: HomeComponent,
+    canActivate:[AuthGuard]
   },
   {
-    path:'logout',
-    component:LoginComponent
+    path: 'logout',
+    component: LoginComponent,
+    canActivate:[AuthGuard]
 
   }
 
