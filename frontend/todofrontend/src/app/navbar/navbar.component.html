@@ -1,24 +1,34 @@
-<div class="container mx-auto">
-  <nav >
+<div>
+  <nav>
     <ul>
       <div>
         <li class="nav_link">
-            <a routerLink="/completed" routerLinkActive="active">completed</a>
+          <a routerLink="/home" routerLinkActive="active">All</a>
         </li>
         <li class="nav_link">
-            <a routerLink="/uncompleted/" routerLinkActive="active">uncompleted</a>
+          <a routerLink="/completed" routerLinkActive="active">Done</a>
         </li>
         <li class="nav_link">
-           <a routerLink="/home" routerLinkActive="active">all</a>
+          <a routerLink="/uncompleted/" routerLinkActive="active">Todo</a>
         </li>
       </div>
       <div>
-        <li >
-            <a routerLink="/logout" (click)="handleLogOut()" class="logout">{{this.user.getUserName()}} | Logout</a>
+        <li class="nav_link">
+          <span> {{ this.user.getUserName() }} | </span>
+         
+          <a routerLink="" (click)="handleLogOut()" 
+            >
+            <button
+              class="btn btn-primary btn-sm"
+              type="button"
+              value="Input"
+              id="lgBtn"
+            >
+              Logout
+            </button>
+          </a>
         </li>
       </div>
     </ul>
-
-    
   </nav>
 </div>

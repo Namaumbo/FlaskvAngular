@@ -5,6 +5,7 @@ import { CompletelistComponent } from './completelist/completelist.component';
 import { UncompleteComponent } from './uncomplete/uncomplete.component';
 import { HomeComponent } from './home/home.component';
 import { AuthGuard } from './guards/auth.guard';
+import { NotfoundComponent } from './notfound/notfound.component';
 
 const routes: Routes = [
   {
@@ -27,11 +28,11 @@ const routes: Routes = [
     canActivate:[AuthGuard]
   },
   {
-    path: 'logout',
-    component: LoginComponent,
+    path:'**',
+    component : NotfoundComponent,
     canActivate:[AuthGuard]
-
   }
+ 
 
 ];
 

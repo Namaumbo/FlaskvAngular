@@ -8,30 +8,32 @@ import { tap } from 'rxjs';
 })
 export class UserService {
 
-//  
-  urlPrefix = 'http://127.0.0.1:5000/api/v1'
+  //  
+  urlPrefix = 'http://192.168.0.182:5000/api/v1'
+  // urlPrefix = 'http://127.0.0.1:5000/api/v1'
 
-  public userResObject : any = {}
+
+  public userResObject: any = {}
 
 
 
   userName = ''
-  constructor(private HttpClient: HttpClient, public router: Router) { 
+  constructor(private HttpClient: HttpClient, public router: Router) {
   }
 
-  getUserName(){
+  getUserName() {
     return this.userName;
   }
-  setUserName(username : string){
+  setUserName(username: string) {
     this.userName = username
   }
 
-  userLogin(userDetails : any){
-    let userAuth =  `${this.urlPrefix}/login`
+  userLogin(userDetails: any) {
+    let userAuth = `${this.urlPrefix}/login`
     this.userResObject = {}
-    return this.HttpClient.post<any>(userAuth,userDetails).pipe(
-      tap((response)=>{
-        localStorage.setItem('token',response.token)
+    return this.HttpClient.post<any>(userAuth, userDetails).pipe(
+      tap((response) => {
+        localStorage.setItem('token', response.token)
         this.router.navigate(['/home'])
 
       })
@@ -40,14 +42,14 @@ export class UserService {
 
   isLoggedIn(): boolean {
     const token = localStorage.getItem('token');
-    if (token )
-    return true
+    if (token)
+      return true
     else
-    return false
+      return false
   }
 
-  isLoggedOut(): boolean{
-    localStorage.setItem('token','');
+  isLoggedOut(): boolean {
+    localStorage.setItem('token', '');
     return false
   }
 

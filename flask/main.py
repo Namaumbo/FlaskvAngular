@@ -88,14 +88,16 @@ def get_user_todo_list():
     status = ''
 
     try:
+        
         headers = request.headers
-        # if (headers['Authorization'] in headers) :
-        token = headers['Authorization'].split(" ")[1]
-        # else:
-        # return 'Unauthorized'
+
+        if ('Authorization' in headers) :
+            token = headers['Authorization'].split(" ")[1]
+        else:
+            return jsonify({'message':'Not Authorized','status':'fail'}),401
 
         payload = jwt.decode(
-            token, app.config['SECRET_KEY'], algorithms=["HS256"])
+                token, app.config['SECRET_KEY'], algorithms=["HS256"])
 
         with open('./data/todos.json') as data:
 
@@ -105,23 +107,27 @@ def get_user_todo_list():
             for user_list in users_todo_json:
                 if (user_list['userId'] == payload['user_id']):
                     user_todo.append(user_list)
-        data.close()
+            data.close()
 
-        if len(user_todo) > 1:
-            code = 200
-            message = f"${payload} to do list"
-            status = 'success'
+            if len(user_todo) >= 1:
+                code = 200
+                message = f"${payload} to do list"
+                status = 'success'
 
-            return jsonify({'status': status, 'header': header, 'message': message, 'todos': user_todo}), code
-        else:
-            status = 'fail',
-            message = f"no items at the moment please add"
-            code = 404
+                return jsonify({'status': status, 'header': header, 'message': message, 'todos': user_todo}), code
+            else:
+                status = 'fail',
+                message = f"no items at the moment please add"
+                code = 200
+                items = []
 
-            return jsonify({'status': status, 'header': header, 'message': message,'items':user_todo}), code
+                return jsonify({'status': status, 'header': header, 'message': message,'todos':items}), code
 
+    except KeyError as e :
+        return jsonify({'message':'Not Authorized','status':'fail'})
     except jwt.DecodeError as e:
-        return str(e)
+        return jsonify({'status':'fail'})
+    
 
 #  add  to do for a user
 
@@ -137,7 +143,12 @@ def add_to_do():
     # the id shoould be a random string of length 10--done
 
     headers = request.headers
-    token = headers['Authorization'].split(" ")[1]
+    
+    if ('Authorization' in headers) :
+        token = headers['Authorization'].split(" ")[1]
+    else:
+        return jsonify({'message':'Not Authorized','status':'fail'}),401
+  
     payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
     random_string = ''.join(random.choice(string.ascii_letters)
                             for _ in range(10))
@@ -145,14 +156,17 @@ def add_to_do():
     item_body = {
         "completed": False,
         "userId": None,
-        'title': '',
-        'id': random_string
+        "title": "",
+        "description" :"",
+        "id": random_string
     }
 
     title = request.json.get('title')
+    description  = request.json.get('description')
 
     if (payload and title):
         item_body['title'] = title
+        item_body['description'] = description
         item_body['userId'] = payload['user_id']
     else:
         jsonify({'message': 'no user or title'})
@@ -164,10 +178,15 @@ def add_to_do():
             users_todo = data.read()
             users_todo_json = json.loads(users_todo)
             users_todo_json.append(item_body)
+
+
         data.close()
         # writting to the file
         pr_status = False
         with open('./data/todos.json', 'w') as file:
+
+            
+
             json.dump(users_todo_json, file)
             pr_status = True
         data.close()
@@ -261,6 +280,33 @@ def complete_todo(item_id):
     return jsonify({'message':'success','item':users_todo_json})
 
 
+@app.route('/api/v1/undo-todo/<item_id>', methods=['PUT'])
+def undo_todo(item_id):
+    
+    token = request.headers['Authorization'].split(" ")[1]
+    payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+    found_todo = {}
+    with open('data/todos.json', 'r') as file:
+        user_todo_json = json.load(file)
+
+        for todo in user_todo_json:
+            if todo['id'] == item_id :
+                if todo['completed'] == True :
+                    found_todo = todo 
+                    break
+        if found_todo :
+            found_todo['completed'] = False
+        else:
+            message = 'no item',
+            code = 200,
+            status = 'success'
+            return jsonify({'message':message , 'status':status}),code 
+        
+        with open('./data/todos.json', 'w') as file:
+            json.dump(user_todo_json ,file, indent=4)
+    file.close()
+
+    return jsonify({'message':'success','item':user_todo_json})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)

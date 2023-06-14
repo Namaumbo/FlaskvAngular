@@ -1,39 +1,119 @@
-<div class="container mx-auto">
-
+<div>
+  <div class="container-fluid">
     <div class="wrapper">
-        <button
-        class="bg-blue-300 hover:bg-blue-400 text-gray-800 font-bold py-2 px-4 rounded-l"
-        (click)="handleAddTodo()"
-      >Add</button>
-      <input class="inp" placeholder="add"   [(ngModel)]="todoTitle"/>
-      
+      <div class="inputs">
+        <div class="input">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Enter Task"
+            [(ngModel)]="todoTitle"
+            maxlength="100"
+            (keypress)="checkMax()"
+          />
+          <div class="actionBtns">
+            <button
+              type="button"
+              id="addBtn"
+              class="btn btn-secondary"
+              (click)="handleAddTodo()"
+            >
+              Add Task
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-  
-    <div class="condition">
-        <span *ngIf="condition">{{noItem}}</span>
-    </div>
-  <ul>
-    <li *ngFor="let i of this.todo.getUserData()">
-      <span [ngClass]="{ completed: i['completed'] }">
-        {{ i["title"] }}
-      </span>
+  </div>
 
-      <div class="inline-flex">
-        <button
-          class="bg-blue-300 hover:bg-blue-400 text-gray-800 font-bold py-2 px-4 rounded-l"
-          (click)="handleComplete(i['id'])"
-        >
-          done
-        </button>
-        <button
-          class="bg-red-300 hover:bg-red-400 text-gray-800 font-bold py-2 px-4 rounded-r"
-          (click)="handleDelete(i['id'])"
-        >
-          delete
-        </button>
+  <!-- <div class="condition">
+    <span *ngIf="condition">{{ noItem }}</span>
+  </div> -->
+  <div class="stat">
+    <ul class="stats">
+      <li>
+        <h5><b>total :</b> {{ this.todo.getUserData().length }}</h5>
+      </li>
+      <li>
+        <h5><b>Incomplete:</b> {{this.undoList.length}}</h5>
+      </li>
+      <li>
+        <h5><b>Completed :</b> {{ this.doneList.length}}</h5>
+      </li>
+    </ul>
+  </div>
+
+  <ul class="list">
+    <li *ngFor="let i of this.todo.getUserData().reverse()">
+      <div class="card">
+        <div class="card-body">
+          <div id="span">
+            <span [ngClass]="{ completed: i['completed'] }">
+              {{ i["title"] }}
+            </span>
+          </div>
+
+          <div class="btns">
+            <ul>
+              <li *ngIf="!i['completed']; else block">
+                <button
+                  type="button"
+                  class="btn btn-success btn-sm"
+                  (click)="handleComplete(i['id'])"
+                >
+                  Done
+                </button>
+              </li>
+
+              <ng-template #block>
+                <li>
+                  <button
+                    type="button"
+                    class="btn btn-success btn-sm"
+                    (click)="handleUndo(i['id'])"
+                  >
+                    Undo
+                  </button>
+                </li>
+              </ng-template>
+              <li>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm"
+                  (click)="handleDelete(i['id'])"
+                  data-bs-toggle="modal"
+                >
+                  Delete
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </li>
   </ul>
-
-
 </div>
+
+<!-- Button trigger modal -->
+<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Launch static backdrop modal
+</button> -->
+
+<!-- Modal -->
+<!-- <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div> -->

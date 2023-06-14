@@ -1,10 +1,44 @@
-<div class="container mx-auto">
-    <ul>
-      <li *ngFor="let i of this.todo.getUserData()">
-        <span *ngIf="!i['completed']">
-          {{ i["title"] }}
-        </span>
-      </li>
-    </ul>
+<div class="stats">
+  <h3>Total number of completed tasks : {{unDoneList.length}}</h3>
+</div>
+<div class="container-fluid">
+  <div class="wrapper">
+    <div>
+      <ul>
+        <li *ngFor="let i of this.todo.getUserData()">
+          <div class="card" *ngIf="!i['completed']">
+            <div class="card-body">
+              <div id="span">
+                <span >
+                  {{ i["title"] }}
+                </span>
+              </div>
+              <div class="btns">
+                <ul>
+                  <li>
+                    <button
+                      type="button"
+                      class="btn btn-success btn-sm"
+                      (click)="handleComplete(i['id'])"
+                    >
+                      Done
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      class="btn btn-danger btn-sm"
+                      (click)="handleDelete(i['id'])"
+                    >
+                      Delete
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
-  
+</div>

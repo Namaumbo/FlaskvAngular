@@ -1,31 +1,77 @@
-.completed{
-    text-decoration: line-through;
- 
+.completed {
+  color: green;
+  text-decoration: line-through green;
+  font-weight: bold;
+}
+
+.form-control {
+  width: 49em;
+}
+.wrapper {
+  margin: auto;
+  // display: flex;
+}
+.container-fluid {
+  display: flex;
+}
+.input {
+  display: flex;
+  border: 1em solid#eeeeee;
+
+  border-radius: 5px;
+}
+
+.actionBtns {
+}
+
+#addBtn {
+  margin-left: 1px;
+}
+#span {
+  max-width: 33.5em;
+}
+.btns {
+  ul {
+    li {
+      display: inline;
+      margin-left: 3px;
+    }
+  }
+}
+.card {
+  width: 45em;
+  margin: 5px auto;
+}
+.card-body {
+  display: flex;
+  justify-content: space-between;
+}
+.condition {
+  span {
+    text-align: center;
+    color: grey;
+  }
 }
 li{
-    display: flex;
-    justify-content: space-between;
+  display: flex;
 }
-ul{
-    padding-left: 15em;
-    padding-right: 15em;
-}
-button:nth-child(1){
-    margin-right: 10px;
-}
-button{
-    margin-bottom: 4px;
-}
-.inp{
-border: 1px solid grey;
-width: 50em;
-}
-.wrapper{
-    margin-left: 15em;
-}
-.condition{
-    span{
-        margin-left:35em;
-       color: grey;
+
+.stat {
+  ul{
+    li{
+      margin-left: 10px;
+      h5{
+        font-size: 20px;
+      }
     }
+    
+  }
+
+  margin: 2em auto ;
+  width: 25em;
+  
+}
+
+.stats{
+  display: flex;
 }
