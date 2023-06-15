@@ -10,7 +10,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { UserService } from './services/user.service';
-import { AuthGuard } from './guards/auth.guard';
+import { AuthGuard } from './services/guards/auth.guard';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // import {MatButtonModule} from '@angular/material'

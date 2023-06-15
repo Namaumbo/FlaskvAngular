@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TodoserviceService } from '../../services/todoservice.service';
+import { TodoserviceService } from '../../services/todo/todoservice.service';
 
 @Component({
   selector: 'app-completelist',

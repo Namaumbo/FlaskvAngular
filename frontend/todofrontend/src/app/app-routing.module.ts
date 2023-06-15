@@ -4,7 +4,7 @@ import { LoginComponent } from './components/login/login.component';
 import { CompletelistComponent } from './components/completelist/completelist.component';
 import { UncompleteComponent } from './components/uncomplete/uncomplete.component';
 import { HomeComponent } from './components/home/home.component';
-import { AuthGuard } from './guards/auth.guard';
+import { AuthGuard } from './services/guards/auth.guard';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 
 const routes: Routes = [
