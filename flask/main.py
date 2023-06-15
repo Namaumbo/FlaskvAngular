@@ -308,6 +308,24 @@ def undo_todo(item_id):
 
     return jsonify({'message':'success','item':user_todo_json})
 
+
+@app.route('/api/v1/show-item/<item_id>',methods=['GET'])
+def show_item(item_id):
+
+    token = request.headers['Authorization'].split(" ")[1]
+    payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
+    foundItem = {}
+
+    with open('data/todos.json', 'r') as file: 
+        user_todo_json = json.load(file)   
+        
+        for todo in user_todo_json:
+            if todo['id'] == item_id :
+                foundItem = todo
+        if foundItem :
+            return jsonify({'message':'found item','item':foundItem}),200
+        else:
+            return jsonify({'message':'no item'})
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
 

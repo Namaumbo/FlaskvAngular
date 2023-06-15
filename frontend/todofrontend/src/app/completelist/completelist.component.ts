@@ -12,27 +12,31 @@ export class CompletelistComponent {
   // checker
 
   checkUndone(){
-      this.doneList= this.todo.getUserData().filter(item=>{
+      this.doneList= this.todo.getUserData().filter((item: any)=>{
         return item['completed'] == true
       })
   }
-
   handleDelete(id: string) {
-    this.todo.deleteATodo(id).subscribe(res => {
-      prompt('item successfully deleted')
 
-      this.todo.getUserList().subscribe(resp => {
-
-        if (resp.todos.length == 0) {
-          this.todo.setUserData(resp.todos)
-          this.checkUndone()
-        } else {
-          this.todo.setUserData(resp.todos)
-          this.checkUndone()
-        }
+    let choice = confirm("Are you sure you want to delete this item?")
+    if (choice){
+      this.todo.deleteATodo(id).subscribe(res => {
+        alert('item successfully deleted')
+        // console.log(res)
+        this.todo.getUserList().subscribe(resp => {
+          if (resp.todos.length == 0) {
+            this.todo.setUserData(resp.todos)
+            this.checkUndone()
+          } 
+            this.todo.setUserData(resp.todos)
+            this.checkUndone()
+  
+        })
+  
       })
+    }
+    return
 
-    })
 
   }
 
@@ -57,6 +61,14 @@ export class CompletelistComponent {
   }
 
   ngOnInit() {
-    this.checkUndone()
+    this.todo.getUserList().subscribe({
+      next: res => {
+        this.todo.setUserData(res.todos)
+        this.checkUndone()
+      },
+      error: err => {
+      }
+    })
+  
   }
 }

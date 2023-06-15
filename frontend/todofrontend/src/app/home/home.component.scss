@@ -4,8 +4,12 @@
   font-weight: bold;
 }
 
+.home{
+  width: 85%;
+  margin: auto;
+}
 .form-control {
-  width: 49em;
+  width: 100%
 }
 .wrapper {
   margin: auto;
@@ -14,21 +18,31 @@
 .container-fluid {
   display: flex;
 }
+.inputs {
+  border: 3.2em solid#eeeeee;
+  border-radius: 5px ;
+}
 .input {
-  display: flex;
   border: 1em solid#eeeeee;
-
-  border-radius: 5px;
+}
+.textarea {
+  border: 1em solid#eeeeee;
+  
 }
 
-.actionBtns {
+.actionBtn {
+  float: right;
+  margin-top: -0.7em;
+  margin-right: 0.5em;
+  padding: 10px
 }
-
 #addBtn {
   margin-left: 1px;
+  background-color: #3f51b5;
+  border: 1px solid #3f51b5;
 }
 #span {
-  max-width: 33.5em;
+  max-width: 80%;
 }
 .btns {
   ul {
@@ -39,7 +53,7 @@
   }
 }
 .card {
-  width: 45em;
+  width: 85%;
   margin: 5px auto;
 }
 .card-body {
@@ -52,26 +66,36 @@
     color: grey;
   }
 }
-li{
+li {
   display: flex;
+}
+.list{
+  padding-right: 2em;
 }
 
 .stat {
-  ul{
-    li{
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+  ul {
+    li {
       margin-left: 10px;
-      h5{
+      h5 {
         font-size: 20px;
       }
     }
-    
   }
 
-  margin: 2em auto ;
-  width: 25em;
-  
+
 }
 
-.stats{
+.stats {
   display: flex;
+}
+
+.title{
+  color: gray;
+}
+#desc{
+font-style: italic;
 }

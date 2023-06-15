@@ -7,11 +7,11 @@ import { Injectable } from '@angular/core';
 export class TodoserviceService {
 
   
-  // urlPrefix = 'http://192.168.0.182:5000/api/v1'
-  urlPrefix = 'http://127.0.0.1:5000/api/v1'
+  urlPrefix = 'http://192.168.0.182:5000/api/v1'
+  // urlPrefix = 'http://127.0.0.1:5000/api/v1'
   constructor(public HttpClient: HttpClient) { }
 
-  userData = [];
+  userData: any = [];
 
 
   setUserData(data: any) {
@@ -74,6 +74,18 @@ export class TodoserviceService {
       'Authorization': `Bearer ${token}`
     });
     return this.HttpClient.put<any>(apiUrl, '', { headers: headers })
+  }
+
+  showItem(id:string){
+    let apiUrl = `${this.urlPrefix}/show-item/${id}`
+    const token = localStorage.getItem('token')
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    });
+    return this.HttpClient.get<any>(apiUrl, { headers: headers })
+
+
 
   }
 }

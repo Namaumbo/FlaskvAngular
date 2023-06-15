@@ -1,16 +1,27 @@
-
-  <div class="container-fluid">
-    <h3>Login to your account</h3>
+<div class="container-fluid">
+  <h3>Login</h3>
   <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Username</label>
-    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"   [(ngModel)]="userName">
+    <input
+      type="email"
+      class="form-control"
+      id="exampleInputEmail1"
+      aria-describedby="emailHelp"
+      [(ngModel)]="userName"
+    />
   </div>
   <div class="mb-3">
     <label for="exampleInputPassword1" class="form-label">Password</label>
-    <input type="password" class="form-control" id="exampleInputPassword1" [(ngModel)]="password"  >
+    <input
+      type="password"
+      class="form-control"
+      id="exampleInputPassword1"
+      [(ngModel)]="password"
+      (keyup.enter)="checkEnter()"
+    />
   </div>
-  <button type="submit" class="btn btn-primary"   
-  (click) = "handleLogin()"
-  >Sign in</button>
-  <h3 style="color:tomato">{{err}}</h3>
+  <button type="submit" class="btn btn-primary" (click)="handleLogin()">
+    Sign in
+  </button>
+  <h3 style="color: tomato">{{ err }}</h3>
 </div>

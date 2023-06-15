@@ -9,6 +9,7 @@ import { TodoserviceService } from '../services/todoservice.service';
 })
 export class NavbarComponent {
 
+  username : any
   handleLogOut() {
     // this.user.isLoggedIn()
     localStorage.setItem('token','')
@@ -19,5 +20,8 @@ export class NavbarComponent {
 
   }
 
+  ngOnInit(){
+   this.username = localStorage.getItem('username')
+  }
 
 }

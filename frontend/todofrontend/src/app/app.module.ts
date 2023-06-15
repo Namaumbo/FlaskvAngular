@@ -12,6 +12,9 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { UserService } from './services/user.service';
 import { AuthGuard } from './guards/auth.guard';
 import { NotfoundComponent } from './notfound/notfound.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import {MatButtonModule} from '@angular/material'
+
 
 @NgModule({
   declarations: [
@@ -27,7 +30,10 @@ import { NotfoundComponent } from './notfound/notfound.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+   
+   
   ],
   providers: [UserService,AuthGuard],
   bootstrap: [AppComponent]

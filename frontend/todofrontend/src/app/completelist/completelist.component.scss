@@ -2,6 +2,7 @@
 }
 .wrapper {
   margin: auto;
+  padding-right: 2%;
 }
 .container-fluid {
   display: flex;
@@ -14,10 +15,10 @@ li {
   display: flex;
 }
 #span {
-  max-width: 33,5em;
+  max-width: 80%;
 }
 .card {
-  width: 45em;
+  width: 90%;
   margin: 5px auto;
 }
 .card-body {
@@ -26,7 +27,7 @@ li {
 }
 .btns {
   ul {
-    width: 150px;
+    // width: 150px;
     li {
       display: inline;
       margin-left: 1px;
@@ -41,4 +42,10 @@ h3{
   font-size: 18px;
   font-weight: bold;
   text-align: center;
+}
+.title{
+  color: gray;
+}
+#desc{
+font-style: italic;
 }
