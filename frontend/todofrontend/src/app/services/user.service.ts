@@ -21,12 +21,13 @@ export class UserService {
   constructor(private HttpClient: HttpClient, public router: Router) {
   }
 
-  getUserName() {
-    return this.userName;
-  }
-  setUserName(username: string) {
-    this.userName = username
-  }
+  // getUserName() {
+  //   return this.userName;
+  // }
+  // setUserName(username: string) {
+  //   this.userName = username
+  // }
+  
 
   userLogin(userDetails: any) {
     let userAuth = `${this.urlPrefix}/login`

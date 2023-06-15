@@ -13,10 +13,10 @@ li {
   display: flex;
 }
 #span {
-  max-width: 420px;
+  max-width: 45em;
 }
 .card {
-  width: 600px;
+  width: 90%;
   margin: 5px auto;
 }
 .card-body {
@@ -25,7 +25,7 @@ li {
 }
 .btns {
   ul {
-    width: 150px;
+    
     li {
       display: inline;
       margin-left: 1px;
@@ -40,4 +40,10 @@ h3{
   font-size: 18px;
   font-weight: bold;
   text-align: center;
+}
+.title{
+  color: gray;
+}
+#desc{
+font-style: italic;
 }

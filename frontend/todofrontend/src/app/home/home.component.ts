@@ -20,12 +20,16 @@ export class HomeComponent {
   constructor(public todo: TodoserviceService) {
 
   }
+
+  checkEnter() {
+    this.handleAddTodo()
+  }
   //statistics update
   statistics() {
-    this.undoList = this.todo.getUserData().filter(item => {
+    this.undoList = this.todo.getUserData().filter((item: any) => {
       return item['completed'] == false
     })
-    this.doneList = this.todo.getUserData().filter(item => {
+    this.doneList = this.todo.getUserData().filter((item: any) => {
       return item['completed'] == true
     })
   }
@@ -37,11 +41,20 @@ export class HomeComponent {
     }
   }
 
+  checkDescMax() {
+    if (this.todoDescription.length >= 200) {
+      alert('maximum input reached')
+    }
+  }
 
   handleAddTodo() {
 
     if (this.todoTitle.length == 0) {
-      alert('field is empty')
+      alert(' Title field is empty')
+      return
+    }
+    if (this.todoDescription.length == 0) {
+      alert('Description field is empty')
       return
     }
 
@@ -53,26 +66,33 @@ export class HomeComponent {
       })
 
       this.todoTitle = ''
+      this.todoDescription = ''
       this.condition = false
     })
   }
   handleDelete(id: string) {
-    this.todo.deleteATodo(id).subscribe(res => {
-      alert('item successfully deleted')
-      // console.log(res)
-      this.todo.getUserList().subscribe(resp => {
-        if (resp.todos.length == 0) {
-          this.condition = true
-          this.todo.setUserData(resp.todos)
-          this.statistics()
-        } else {
-          this.todo.setUserData(resp.todos)
-          this.statistics()
 
-        }
+    let choice = confirm("Are you sure you want to delete this item?")
+    if (choice){
+      this.todo.deleteATodo(id).subscribe(res => {
+        alert('item successfully deleted')
+        // console.log(res)
+        this.todo.getUserList().subscribe(resp => {
+          if (resp.todos.length == 0) {
+            this.condition = true
+            this.todo.setUserData(resp.todos)
+            this.statistics()
+          } else {
+            this.todo.setUserData(resp.todos)
+            this.statistics()
+  
+          }
+        })
+  
       })
+    }
+    return
 
-    })
 
   }
   handleComplete(id: string) {
@@ -81,10 +101,10 @@ export class HomeComponent {
 
         this.todo.setUserData(response.todos)
 
-        this.undoList = this.todo.getUserData().filter(item => {
+        this.undoList = this.todo.getUserData().filter((item: any) => {
           return item['completed'] == false
         })
-        this.doneList = this.todo.getUserData().filter(item => {
+        this.doneList = this.todo.getUserData().filter((item: any) => {
           return item['completed'] == true
         })
 
@@ -111,6 +131,12 @@ export class HomeComponent {
       })
     })
   }
+  handleShow(id: string) {
+    this.todo.showItem(id).subscribe(res => {
+      this.todoDescription = res.item.description
+    })
+
+  }
   ngOnInit() {
     this.todo.getUserList().subscribe({
 
@@ -127,8 +153,6 @@ export class HomeComponent {
       error: err => {
         this.noItem = err.error.message
       }
-
-
     })
 
   }

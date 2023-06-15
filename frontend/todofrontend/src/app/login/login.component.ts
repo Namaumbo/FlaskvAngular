@@ -19,16 +19,23 @@ export class LoginComponent {
   }
   // user : any = {}
 
+
   constructor(public user: UserService) { }
+
+  checkEnter() {
+    this.handleLogin()
+  }
   public handleLogin() {
     this.userCredentials = {
       username: this.userName,
       password: this.password
     }
     if (this.password && this.userName) {
-      this.user.userLogin(this.userCredentials).subscribe({
+      this.user.userLogin(this.userCredentials).subscribe({   
         next: (res) => {
-          this.user.setUserName(res.user.name)
+          console.log(res.user)
+          localStorage.setItem('username', res.user.username)
+          // this.user.setUserName(res.user.username)
         }, error: (err) => {
 
           this.err = err.error.message
