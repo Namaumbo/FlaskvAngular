@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UserService } from '../services/user.service';
+import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 
 
@@ -31,7 +31,7 @@ export class LoginComponent {
       password: this.password
     }
     if (this.password && this.userName) {
-      this.user.userLogin(this.userCredentials).subscribe({   
+      this.user.userLogin(this.userCredentials).subscribe({
         next: (res) => {
           console.log(res.user)
           localStorage.setItem('username', res.user.username)

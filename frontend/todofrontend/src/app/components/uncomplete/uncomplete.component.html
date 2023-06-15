@@ -1,15 +1,15 @@
 <div class="stats">
-  <h3>Total number of completed tasks : {{ doneList.length }}</h3>
+  <h3>Total number of completed tasks : {{this.todo.todo_count}}</h3>
 </div>
-<div >
+<div>
   <div class="wrapper">
     <div>
       <ul>
-        <li *ngFor="let i of this.todo.getUserData()">
-          <div class="card" *ngIf="i['completed']">
+        <li *ngFor="let i of this.todo.userData">
+          <div class="card" *ngIf="!i['completed']">
             <div class="card-body">
               <div id="span">
-                <span>
+                <span >
                   <span class="title">Title :</span>
                   {{ i["title"] }}
                   <br />
@@ -26,9 +26,9 @@
                     <button
                       type="button"
                       class="btn btn-success btn-sm"
-                      (click)="handleUndo(i['id'])"
-                    >
-                      Undo
+                      >
+                      <!-- (click)="handleComplete(i['id'])" -->
+                      Done
                     </button>
                   </li>
                   <li>
@@ -45,8 +45,8 @@
                     <button
                       type="button"
                       class="btn btn-danger btn-sm"
-                      (click)="handleDelete(i['id'])"
-                    >
+                      >
+                      <!-- (click)="handleDelete(i['id'])" -->
                       Delete
                     </button>
                   </li>

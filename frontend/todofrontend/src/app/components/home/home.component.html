@@ -3,35 +3,15 @@
     <div class="wrapper">
       <div class="inputs">
         <div class="input">
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Enter Title"
-            [(ngModel)]="todoTitle"
-            maxlength="100"
-            (keypress)="checkMax()"
-            (keyup.enter)="checkEnter()"
-          />
+          <input type="text" class="form-control" placeholder="Enter Title" [(ngModel)]="todoTitle" maxlength="100"
+            (keyup.enter)="checkEnter()" />
         </div>
         <div class="textarea">
-          <textarea
-            class="form-control"
-            placeholder="Description here"
-            id="floatingTextarea2"
-            style="height: 100px"
-            maxlength="1000"
-            (keypress)="checkDescMax()"
-            (keyup.enter)="checkEnter()"
-            [(ngModel)]="todoDescription"
-          ></textarea>
+          <textarea class="form-control" placeholder="Description here" id="floatingTextarea2" style="height: 100px"
+            maxlength="1000" (keyup.enter)="checkEnter()" [(ngModel)]="todoDescription"></textarea>
         </div>
         <div class="actionBtn">
-          <button
-            type="button"
-            id="addBtn"
-            class="btn btn-secondary"
-            (click)="handleAddTodo()"
-          >
+          <button type="button" id="addBtn" class="btn btn-secondary" (click)="handleAddTodo()">
             Add Task
           </button>
         </div>
@@ -48,29 +28,29 @@
         <h5><b>Total :</b> {{ this.todo.userData.length }}</h5>
       </li>
       <li>
-        <h5><b>Incomplete:</b> {{ this.undoList.length }}</h5>
+        <h5><b>Incomplete:</b> {{ this.todo.todo_count }}</h5>
       </li>
       <li>
-        <h5><b>Completed :</b> {{ this.doneList.length }}</h5>
+        <h5><b>Completed :</b> {{ this.todo.done_count }}</h5>
       </li>
     </ul>
   </div>
-  
+
   <ul class="list">
     <li *ngFor="let i of this.todo.userData.reverse()">
       <div class="card">
         <div class="card-body">
           <div id="span">
-            
+
             <span [ngClass]="{ completed: i['completed'] }">
               <span class="title">Title :</span>
               {{ i["title"] }}
               <br />
-             
+
               <span *ngIf="i.show">
                 <hr />
                 <span class="title">Description:</span>
-                <span id="desc">  {{ i["description"] }}</span>
+                <span id="desc"> {{ i["description"] }}</span>
               </span>
             </span>
           </div>
@@ -78,41 +58,27 @@
           <div class="btns">
             <ul>
               <li *ngIf="!i['completed']; else block">
-                <button
-                  type="button"
-                  class="btn btn-success btn-sm"
-                  (click)="handleComplete(i['id'])"
-                >
+                <button type="button" class="btn btn-success btn-sm">
+                  <!-- (click)="handleComplete(i['id'])" -->
                   Done
                 </button>
               </li>
               <ng-template #block>
                 <li>
-                  <button
-                    type="button"
-                    class="btn btn-success btn-sm"
-                    (click)="handleUndo(i['id'])"
-                  >
+                  <button type="button" class="btn btn-success btn-sm">
+                    <!-- (click)="handleUndo(i['id'])" -->
                     Undo
                   </button>
                 </li>
               </ng-template>
               <li>
-                <button
-                  type="button"
-                  class="btn btn-primary btn-sm"
-                  (click)="i.show = !i.show"
-                >
+                <button type="button" class="btn btn-primary btn-sm" (click)="i.show = !i.show">
                   <span *ngIf="i.show">Hide</span>
                   <span *ngIf="!i.show">Show</span>
                 </button>
               </li>
               <li>
-                <button
-                  type="button"
-                  class="btn btn-danger btn-sm"
-                  (click)="handleDelete(i['id'])"
-                >
+                <button type="button" class="btn btn-danger btn-sm" (click)="this.todo.deleteTodo(i['id'])">
                   Delete
                 </button>
               </li>

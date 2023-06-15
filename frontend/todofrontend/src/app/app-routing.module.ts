@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './login/login.component';
-import { CompletelistComponent } from './completelist/completelist.component';
-import { UncompleteComponent } from './uncomplete/uncomplete.component';
-import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './components/login/login.component';
+import { CompletelistComponent } from './components/completelist/completelist.component';
+import { UncompleteComponent } from './components/uncomplete/uncomplete.component';
+import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './guards/auth.guard';
-import { NotfoundComponent } from './notfound/notfound.component';
+import { NotfoundComponent } from './components/notfound/notfound.component';
 
 const routes: Routes = [
   {
@@ -32,7 +32,7 @@ const routes: Routes = [
     component : NotfoundComponent,
     canActivate:[AuthGuard]
   }
- 
+
 
 ];
 

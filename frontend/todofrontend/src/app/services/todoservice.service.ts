@@ -1,91 +1,116 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpService } from './http/http.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoserviceService {
 
-  
-  urlPrefix = 'http://192.168.0.182:5000/api/v1'
-  // urlPrefix = 'http://127.0.0.1:5000/api/v1'
-  constructor(public HttpClient: HttpClient) { }
+
+  public todoTitle = "";
+  public todoDescription = "";
+  public condition = true;
+  constructor(public HttpClient: HttpService) { }
 
   userData: any = [];
+  doneList: any = [];
+
+  public done_count = 0
+  public todo_count = 0
 
 
   setUserData(data: any) {
     this.userData = data
-  }
-  getUserData() {
-    return this.userData
-  }
-  getUserList() {
-    let userList = `${this.urlPrefix}/get_user_list`
-
-    const token = localStorage.getItem('token')
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+    this.userData.forEach((e: any) => {
+      if (e['completed']) {
+        this.done_count += 1
+      } else {
+        this.todo_count += 1
+      }
     });
-    return this.HttpClient.get<any>(userList, { headers: headers })
   }
-  addTodoToUser(title: string, description : string) {
-    let apiUrl = `${this.urlPrefix}/add-todo`
-    const token = localStorage.getItem('token')
+
+
+  checkUndone() {
+    this.doneList = this.userData.filter((item: any) => {
+      return item['completed'] == true
+    })
+  }
+
+
+  getUserList() {
+    this.HttpClient.get('get_user_list').subscribe((resp: any) => {
+      if (resp.todos.length == 0) {
+        this.setUserData(resp.todos)
+        this.checkUndone()
+      }
+      this.setUserData(resp.todos)
+      this.checkUndone()
+
+    })
+  }
+
+
+  addTodoToUser(title: string, description: string) {
+
     let body = {
       "title": title,
-      "description" : description
+      "description": description
     }
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
-    return this.HttpClient.post<any>(apiUrl, body, { headers: headers })
+
+    return this.HttpClient.post('add-todo', body).subscribe(res => {
+      alert('successfully added')
+      this.getUserList()
+      this.todoTitle = ''
+      this.todoDescription = ''
+      this.condition = false
+    })
   }
 
-  deleteATodo(id: string ) {
-    let apiUrl = `${this.urlPrefix}/delete-todo/${id}`
-    const token = localStorage.getItem('token')
-
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
-    return this.HttpClient.delete<any>(apiUrl, { headers: headers })
+  public deleteTodo(id: string) {
+    if (confirm("Are you sure you want to delete this item?")) {
+      this.HttpClient.delete(`/delete-todo/${id}`).subscribe((resp: any) => {
+        if (resp.todos.length == 0) {
+          this.condition = true
+          this.setUserData(resp.todos)
+        } else {
+          this.setUserData(resp.todos)
+        }
+      })
+    }
   }
 
-  completeAToDo(id: string) {
-    let apiUrl = `${this.urlPrefix}/complete-todo/${id}`
-    const token = localStorage.getItem('token')
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
-    return this.HttpClient.put<any>(apiUrl, '', { headers: headers })
-  }
+  // completeAToDo(id: string) {
+  //   let apiUrl = `${this.urlPrefix}/complete-todo/${id}`
+  //   const token = localStorage.getItem('token')
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     'Authorization': `Bearer ${token}`
+  //   });
+  //   return this.HttpClient.put<any>(apiUrl, '', { headers: headers })
+  // }
 
-  uncompleteAToDo(id:string){
+  // uncompleteAToDo(id: string) {
 
-    let apiUrl = `${this.urlPrefix}/undo-todo/${id}`
-    const token = localStorage.getItem('token')
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
-    return this.HttpClient.put<any>(apiUrl, '', { headers: headers })
-  }
+  //   let apiUrl = `${this.urlPrefix}/undo-todo/${id}`
+  //   const token = localStorage.getItem('token')
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     'Authorization': `Bearer ${token}`
+  //   });
+  //   return this.HttpClient.put<any>(apiUrl, '', { headers: headers })
+  // }
 
-  showItem(id:string){
-    let apiUrl = `${this.urlPrefix}/show-item/${id}`
-    const token = localStorage.getItem('token')
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
-    return this.HttpClient.get<any>(apiUrl, { headers: headers })
+  // showItem(id: string) {
+  //   let apiUrl = `${this.urlPrefix}/show-item/${id}`
+  //   const token = localStorage.getItem('token')
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     'Authorization': `Bearer ${token}`
+  //   });
+  //   return this.HttpClient.get<any>(apiUrl, { headers: headers })
 
 
 
-  }
+  // }
 }
