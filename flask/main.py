@@ -88,8 +88,7 @@ def get_user_todo_list():
         else:
             return jsonify({'message':'Not Authorized','status':'fail'}),401
 
-        payload = jwt.decode(
-                token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
 
         with open('./data/todos.json') as data:
 
