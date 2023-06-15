@@ -12,23 +12,10 @@ CORS(app)
 app.config['SECRET_KEY'] = 'zxcvbnm8870dfgytrer.rt_wer_45er***'
 
 
-# login -- done
-# getTodo for a specific user --done
-# add todo for specific user-- done
-# delete todo for a specific user--done
-# update to do for a specific user
-
 
 # login
 @app.route('/api/v1/login', methods=['POST'])
 def login():
-    #
-    # open the user.json/ --done
-    # loop over the data and see if user request n json data r equal --done
-    # check if the request body contains the password and  username-- done
-    # generate token with payload containing the user id--- done
-    # if not found then message pop up saying user not found --- done
-
     user_found = {}
     code = None
     message = ''
@@ -36,51 +23,56 @@ def login():
     status = ''
     username = ''
     password = ''
+    responce = None
 
+    try:
+        request_data = request.get_json()
 
-    if ("password" in request.get_json()) and ("username" in request.get_json()):
+        if ("password" in request_data) and ("username" in request_data):
 
-        with open('data/user.json', 'r') as data:
+            with open('data/user.json', 'r') as file_data:
 
-            username = request.json.get('username')
-            password = request.json.get('password')
-            user_data = data.read()
-            user_list = json.loads(user_data)
+                username = request_data['username']
+                password = request_data['password']
+                user_data = file_data.read()
+                user_list = json.loads(user_data)
 
-            for user in user_list:
+                for user in user_list:
 
-                if username == user['username'] and password == user['password']:
-                    user_found = user
-                    break
-        data.close()
+                    if username == user['username'] and password == user['password']:
+                        user_found = user
+                        break
+            # data.close()
 
-    if user_found:
-        code = 200
-        message = "log in successful"
-        status = 'success'
-        payload = {"user_id": user_found['id']}
-        token = jwt.encode(
-            payload=payload, key=app.config['SECRET_KEY'], algorithm="HS256")
+        if user_found:
+            code = 200
+            message = "log in successful"
+            status = 'success'
+            payload = {"user_id": user_found['id']}
+            token = jwt.encode(payload=payload, key=app.config['SECRET_KEY'], algorithm="HS256")
 
-        return jsonify({'code': code, 'message': message, 'header': header, 'status': status, 'user': user_found, 'token': token}), code
+            # return jsonify({'code': code, 'message': message, 'header': header, 'status': status, 'user': user_found, 'token': token}), code
+            responce = {'code': code, 'message': message, 'header': header, 'status': status, 'user': user_found, 'token': token}
 
-    else:
-        code = 404
-        message = "wrong username or password"
-        status = 'fail'
-        return jsonify({'code': code, 'message': message, 'header': header, 'status': status}), code
+        else:
+            code = 404
+            message = "wrong username or password"
+            status = 'fail'
+            responce = {'code': code, 'message': message, 'header': header, 'status': status, 'user': user_found, 'token': token}
+    
+    except Exception as e:
+        responce = {"message": f"{e}", "status":"ERROR"}
+        code = 500
 
+    
+    return jsonify(responce), code
+    
 
 # getting to do for a specific user
 
 @app.route('/api/v1/get_user_list', methods=['GET'])
 def get_user_todo_list():
 
-    # check incoming request headers -- done
-    # extract the authorization token -- done
-    # decode the token --done
-    # find todo list using the token's user id -- done
-    # return the list  -- done
     user_todo = []
     code = None
     message = ''
@@ -124,9 +116,10 @@ def get_user_todo_list():
                 return jsonify({'status': status, 'header': header, 'message': message,'todos':items}), code
 
     except KeyError as e :
-        return jsonify({'message':'Not Authorized','status':'fail'})
+        return jsonify({'message':'Not Authorized','status':'fail'}), 401
+    
     except jwt.DecodeError as e:
-        return jsonify({'status':'fail'})
+        return jsonify({'status':'fail'}), 401
     
 
 #  add  to do for a user
@@ -134,13 +127,6 @@ def get_user_todo_list():
 
 @app.route('/api/v1/add-todo', methods=['POST'])
 def add_to_do():
-
-    #  listen to incoming request to get headers--done
-    # decode the authorization--done
-    # extract the payload user id--done
-    # get the title from the request body--done
-    # add to do item according to the user id--done
-    # the id shoould be a random string of length 10--done
 
     headers = request.headers
     
@@ -206,13 +192,6 @@ def add_to_do():
 
 @app.route('/api/v1/delete-todo/<item_id>', methods=['DELETE'])
 def delete_todo(item_id):
-    # listen to the incoming request
-    # check out the headers
-    # extract the token
-    # check in the todo list payload and user id
-    # open the todo.json
-    # delete the item with the id from the endpoint parameter
-    # delete every item with that payload user id
 
     token = request.headers['Authorization'].split(" ")[1]
     payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
@@ -242,9 +221,7 @@ def delete_todo(item_id):
             message = 'no item with such id'
             code = 404
             status = 'success'
-            jsonify({'message': message, 'code': code,
-                    'status': status}), code
-
+            jsonify({'message': message, 'code': code,'status': status}), code
 
     return jsonify({"message":'no item','code':200,'status':'success',"item":new_data})
 
@@ -326,6 +303,8 @@ def show_item(item_id):
             return jsonify({'message':'found item','item':foundItem}),200
         else:
             return jsonify({'message':'no item'})
+        
+        
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
 
