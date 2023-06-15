@@ -1,21 +1,19 @@
-<div>
-  <div class="home">
-    <div class="wrapper">
-      <div class="inputs">
-        <div class="input">
-          <input type="text" class="form-control" placeholder="Enter Title" [(ngModel)]="todoTitle" maxlength="100"
-            (keyup.enter)="checkEnter()" />
-        </div>
-        <div class="textarea">
-          <textarea class="form-control" placeholder="Description here" id="floatingTextarea2" style="height: 100px"
-            maxlength="1000" (keyup.enter)="checkEnter()" [(ngModel)]="todoDescription"></textarea>
-        </div>
-        <div class="actionBtn">
-          <button type="button" id="addBtn" class="btn btn-secondary" (click)="handleAddTodo()">
-            Add Task
-          </button>
-        </div>
-      </div>
+<div class="main">
+  <div class="inputs">
+    <div class="input">
+      <input type="text" class="form-control" placeholder="Enter Title" [(ngModel)]="todoTitle" maxlength="100"
+        (keyup.enter)="checkEnter()" />
+    </div>
+
+    <div class="textarea">
+      <textarea class="form-control" placeholder="Description here" id="floatingTextarea2" style="height: 100px"
+        maxlength="1000" (keyup.enter)="checkEnter()" [(ngModel)]="todoDescription"></textarea>
+    </div>
+
+    <div class="actionBtn">
+      <button type="button" id="addBtn" class="btn btn-secondary" (click)="handleAddTodo()">
+        Add Task
+      </button>
     </div>
   </div>
 
@@ -40,7 +38,7 @@
     <li *ngFor="let i of this.todo.userData.reverse()">
       <div class="card">
         <div class="card-body">
-          <div id="span">
+          <div id="todo_details">
 
             <span [ngClass]="{ completed: i['completed'] }">
               <span class="title">Title :</span>
@@ -90,26 +88,3 @@
   </ul>
 </div>
 
-<!-- Button trigger modal -->
-<!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-  Launch static backdrop modal
-</button> -->
-
-<!-- Modal -->
-<!-- <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Understood</button>
-      </div>
-    </div>
-  </div>
-</div> -->
