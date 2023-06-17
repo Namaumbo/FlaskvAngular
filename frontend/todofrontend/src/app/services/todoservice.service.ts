@@ -7,8 +7,8 @@ import { Injectable } from '@angular/core';
 export class TodoserviceService {
 
   
-  urlPrefix = 'http://192.168.0.182:5000/api/v1'
-  // urlPrefix = 'http://127.0.0.1:5000/api/v1'
+  // urlPrefix = 'http://192.168.0.182:5000/api/v1'
+  urlPrefix = 'http://127.0.0.1:5000/api/v1'
   constructor(public HttpClient: HttpClient) { }
 
   userData: any = [];

@@ -9,8 +9,8 @@ import { tap } from 'rxjs';
 export class UserService {
 
   //  
-  urlPrefix = 'http://192.168.0.182:5000/api/v1'
-  // urlPrefix = 'http://127.0.0.1:5000/api/v1'
+  // urlPrefix = 'http://192.168.0.182:5000/api/v1'
+  urlPrefix = 'http://127.0.0.1:5000/api/v1'
 
 
   public userResObject: any = {}
