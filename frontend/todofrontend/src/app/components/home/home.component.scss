@@ -1,15 +1,16 @@
+.main {
+  width: 85%;
+  margin: 0 auto;
+}
+
 .completed {
   color: green;
   text-decoration: line-through green;
   font-weight: bold;
 }
 
-.home{
-  width: 85%;
-  margin: auto;
-}
 .form-control {
-  width: 100%
+  width: 100%;
 }
 .wrapper {
   margin: auto;
@@ -18,33 +19,38 @@
 .container-fluid {
   display: flex;
 }
+
 .inputs {
-  border: 3.2em solid#eeeeee;
-  border-radius: 5px ;
-}
-.input {
-  border: 1em solid#eeeeee;
-}
-.textarea {
-  border: 1em solid#eeeeee;
-  
+  background: #efefef;
+  border-radius: 5px;
+  padding: 1em;
+  width: 100%;
+  margin: 3em auto 3em;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  * {
+    margin-top: 0.2em;
+  }
+
+  .actionBtn {
+    display: block;
+
+    #addBtn {
+      background-color: #3f51b5;
+      border: 1px solid #3f51b5;
+      width: 100%;
+    }
+  }
 }
 
-.actionBtn {
-  float: right;
-  margin-top: -0.7em;
-  margin-right: 0.5em;
-  padding: 10px
-}
-#addBtn {
-  margin-left: 1px;
-  background-color: #3f51b5;
-  border: 1px solid #3f51b5;
-}
-#span {
+#todo_details {
   max-width: 80%;
 }
 .btns {
+  margin-top: 1em;
+  align-self: end;
   ul {
     li {
       display: inline;
@@ -52,12 +58,10 @@
     }
   }
 }
-.card {
-  width: 85%;
-  margin: 5px auto;
-}
+
 .card-body {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
 }
 .condition {
@@ -69,8 +73,15 @@
 li {
   display: flex;
 }
-.list{
-  padding-right: 2em;
+
+.list {
+  // padding-right: 2em;
+  // width: 85%;
+
+  .card {
+    width: 85%;
+    margin: 5px auto;
+  }
 }
 
 .stat {
@@ -85,17 +96,15 @@ li {
       }
     }
   }
-
-
 }
 
 .stats {
   display: flex;
 }
 
-.title{
+.title {
   color: gray;
 }
-#desc{
-font-style: italic;
+#desc {
+  font-style: italic;
 }

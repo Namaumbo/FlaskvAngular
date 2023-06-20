@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 import jwt
+from flask_mysqldb import MySQL
 
 # from utils.encode_auth_token import encode_auth_token
 
@@ -11,123 +12,157 @@ app = Flask(__name__)
 CORS(app)
 app.config['SECRET_KEY'] = 'zxcvbnm8870dfgytrer.rt_wer_45er***'
 
+query = 'SELECT * FROM USERS'
 
-# login -- done
-# getTodo for a specific user --done
-# add todo for specific user-- done
-# delete todo for a specific user--done
-# update to do for a specific user
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
+app.config['MYSQL_DB'] = 'todo_db'
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+
+mysql = MySQL(app)
+
+
+# db communication login
+def db_login(sql, data):
+
+    cursor = mysql.connection.cursor()
+    cursor.execute(sql, (data['username'], data['password']))
+    data = cursor.fetchone()
+    cursor.connection.commit()
+    cursor.close()
+
+    return data
+
+# db communication add todo
+
+
+def db_add_todo(sql, data):
+    cursor = mysql.connection.cursor()
+    cursor.execute(sql, (data['completed'], data['title'],
+                   data['description'], data['userId']),)
+    cursor.connection.commit()
+    cursor.close()
+    return True
+
+# done delete
+
+
+def db_del_todo(sql, id):
+    cursor = mysql.connection.cursor()
+    data = cursor.execute(sql, (id,))
+    if data == 1:
+        status = True
+        cursor.connection.commit()
+        cursor.close()
+    else:
+        status = False
+        cursor.connection.commit()
+        cursor.close()
+    return status
+
+
+def db_get_user_todo(sql, data):
+    cursor = mysql.connection.cursor()
+    cursor.execute(sql, (data['userId'],))
+    res = cursor.fetchall()
+    cursor.connection.commit()
+    cursor.close()
+    return res
 
 
 # login
 @app.route('/api/v1/login', methods=['POST'])
 def login():
-    #
-    # open the user.json/ --done
-    # loop over the data and see if user request n json data r equal --done
-    # check if the request body contains the password and  username-- done
-    # generate token with payload containing the user id--- done
-    # if not found then message pop up saying user not found --- done
 
-    user_found = {}
     code = None
     message = ''
     header = {'content-type': 'application/json'}
     status = ''
-    username = ''
-    password = ''
+    response = None
+    token = ''
 
+    # database
+    # getting the connection
+    # then execute an sql
 
-    if ("password" in request.get_json()) and ("username" in request.get_json()):
+    try:
+        request_data = request.get_json()
 
-        with open('data/user.json', 'r') as data:
+        if ("password" in request_data) and ("username" in request_data):
 
-            username = request.json.get('username')
-            password = request.json.get('password')
-            user_data = data.read()
-            user_list = json.loads(user_data)
+            sql = 'select * from users where username = %s and password = %s'
 
-            for user in user_list:
+            response = db_login(sql, request_data)
+            if response:
+                code = 200
+                message = "log in successful"
+                status = 'success'
+                payload = {"userId": response['id']}
+                token = jwt.encode(
+                    payload=payload, key=app.config['SECRET_KEY'], algorithm="HS256")
+                response = {'message': message, 'status': status,
+                            'user': response, 'token': token}
+            else:
+                code = 404
+                message = "wrong username or password"
+                status = 'fail'
+                response = {'message': message, 'header': header,
+                            'status': status, }
 
-                if username == user['username'] and password == user['password']:
-                    user_found = user
-                    break
-        data.close()
+        else:
+            status = 'fail'
+            message = 'Fields empty'
+            code = 422
+            token = ''
+            response = {'status': status, 'message': message}
+    except Exception as e:
+        response = {"message": f"{e}", "status": "ERROR"}
+        code = 500
 
-    if user_found:
-        code = 200
-        message = "log in successful"
-        status = 'success'
-        payload = {"user_id": user_found['id']}
-        token = jwt.encode(
-            payload=payload, key=app.config['SECRET_KEY'], algorithm="HS256")
-
-        return jsonify({'code': code, 'message': message, 'header': header, 'status': status, 'user': user_found, 'token': token}), code
-
-    else:
-        code = 404
-        message = "wrong username or password"
-        status = 'fail'
-        return jsonify({'code': code, 'message': message, 'header': header, 'status': status}), code
+    return jsonify({'response': response,'token':token }), code
 
 
 # getting to do for a specific user
-
-@app.route('/api/v1/get_user_list', methods=['GET'])
+@app.route('/api/v1/get-todo', methods=['GET'])
 def get_user_todo_list():
 
-    # check incoming request headers -- done
-    # extract the authorization token -- done
-    # decode the token --done
-    # find todo list using the token's user id -- done
-    # return the list  -- done
-    user_todo = []
     code = None
     message = ''
     header = {}
     status = ''
 
     try:
-        
+
         headers = request.headers
 
-        if ('Authorization' in headers) :
+        if ('Authorization' in headers):
             token = headers['Authorization'].split(" ")[1]
         else:
-            return jsonify({'message':'Not Authorized','status':'fail'}),401
+            return jsonify({'message': 'Not Authorized', 'status': 'fail'}), 401
 
         payload = jwt.decode(
-                token, app.config['SECRET_KEY'], algorithms=["HS256"])
+            token, app.config['SECRET_KEY'], algorithms=["HS256"])
 
-        with open('./data/todos.json') as data:
+        sql = 'select * from todos where userId = %s '
+        res = db_get_user_todo(sql, payload)
+        if res:
+            code = 200
+            message = f"${payload} to do list"
+            status = 'success'
 
-            users_todo = data.read()
-            users_todo_json = json.loads(users_todo)
+            response = {'status': status, 'header': header,
+                        'message': message, 'items': res}
+        else:
+            status = 'fail',
+            message = "no items at the moment please add"
+            code = 200
+            response = {'status': status, 'header': header,
+                        'message': message, 'items': []}
 
-            for user_list in users_todo_json:
-                if (user_list['userId'] == payload['user_id']):
-                    user_todo.append(user_list)
-            data.close()
-
-            if len(user_todo) >= 1:
-                code = 200
-                message = f"${payload} to do list"
-                status = 'success'
-
-                return jsonify({'status': status, 'header': header, 'message': message, 'todos': user_todo}), code
-            else:
-                status = 'fail',
-                message = f"no items at the moment please add"
-                code = 200
-                items = []
-
-                return jsonify({'status': status, 'header': header, 'message': message,'todos':items}), code
-
-    except KeyError as e :
-        return jsonify({'message':'Not Authorized','status':'fail'})
-    except jwt.DecodeError as e:
-        return jsonify({'status':'fail'})
-    
+    except Exception as e:
+        return jsonify({'status': 'fail', 'message': e}), 401
+    return jsonify(response), code
 
 #  add  to do for a user
 
@@ -135,199 +170,200 @@ def get_user_todo_list():
 @app.route('/api/v1/add-todo', methods=['POST'])
 def add_to_do():
 
-    #  listen to incoming request to get headers--done
-    # decode the authorization--done
-    # extract the payload user id--done
-    # get the title from the request body--done
-    # add to do item according to the user id--done
-    # the id shoould be a random string of length 10--done
-
-    headers = request.headers
-    
-    if ('Authorization' in headers) :
-        token = headers['Authorization'].split(" ")[1]
-    else:
-        return jsonify({'message':'Not Authorized','status':'fail'}),401
-  
-    payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-    random_string = ''.join(random.choice(string.ascii_letters)
-                            for _ in range(10))
-
-    item_body = {
-        "completed": False,
-        "userId": None,
-        "title": "",
-        "description" :"",
-        "id": random_string
-    }
-
-    title = request.json.get('title')
-    description  = request.json.get('description')
-
-    if (payload and title):
-        item_body['title'] = title
-        item_body['description'] = description
-        item_body['userId'] = payload['user_id']
-    else:
-        jsonify({'message': 'no user or title'})
-
     try:
-        # opening a file and loads to json so python can understand
-        with open('./data/todos.json', 'r') as data:
+        headers = request.headers
+        if ('Authorization' in headers):
+            token = headers['Authorization'].split(" ")[1]
 
-            users_todo = data.read()
-            users_todo_json = json.loads(users_todo)
-            users_todo_json.append(item_body)
+        payload = jwt.decode(
+            token, app.config['SECRET_KEY'], algorithms=["HS256"])
 
+        item_body = {
+            "completed": False,
+            "title": "",
+            "description": "",
+        }
 
-        data.close()
-        # writting to the file
-        pr_status = False
-        with open('./data/todos.json', 'w') as file:
+        title = request.json.get('title')
+        description = request.json.get('description')
 
-            
+        if (payload and title):
+            item_body['title'] = title
+            item_body['description'] = description
+            item_body['userId'] = payload['userId']
+        else:
+            response = {'message': 'no user or title'}
 
-            json.dump(users_todo_json, file)
-            pr_status = True
-        data.close()
+        ins_sql = 'INSERT INTO `todos` (`completed`,`title` , `description`,`userId` ) VALUES (%s,%s,%s,%s)'
+        res = db_add_todo(ins_sql, item_body)
 
-        if pr_status:
-            message = f"item added successfully"
+        get_sql = 'select * from todos where userId = %s'
+        todos = db_get_user_todo(get_sql, payload)
+
+        if res:
+            message = "item added successfully"
             code = 200
             status = 'success'
+            response = {'message': message, 'status': status, 'items': todos}
 
-    except OSError as e:
-        return str(e)
+    except Exception as e:
+        code = 500
+        return jsonify({'message': e.args[0], 'status': 'fail'}), code
 
-    return jsonify({'message': message,  'status': status, 'item': users_todo_json}), code
+    return jsonify(response), code
 
-# deleting an item for a specific user
+# deleting todo item
 
 
 @app.route('/api/v1/delete-todo/<item_id>', methods=['DELETE'])
 def delete_todo(item_id):
-    # listen to the incoming request
-    # check out the headers
-    # extract the token
-    # check in the todo list payload and user id
-    # open the todo.json
-    # delete the item with the id from the endpoint parameter
-    # delete every item with that payload user id
 
-    token = request.headers['Authorization'].split(" ")[1]
-    payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-    count = 0
+    try:
+        token = request.headers['Authorization'].split(" ")[1]
+        payload = jwt.decode(
+            token, app.config['SECRET_KEY'], algorithms=["HS256"])
 
-    with open('data/todos.json', 'r') as file:
+        sql = 'DELETE FROM todos where id = %s'
+        res = db_del_todo(sql, item_id)
 
-        users_todo_json = json.load(file)
+        todos_sql = f"SELECT * FROM  todos WHERE  userId = {payload['userId']}"
+        cursor = mysql.connection.cursor()
+        cursor.execute(todos_sql)
+        todos = cursor.fetchall()
 
-        new_data = [todo for todo in users_todo_json
-                    if ('id' in todo) and todo['id'] != item_id 
-                    ]
-        if len(new_data)>0 :
-            count = 1
-    
-    with open('./data/todos.json', 'w') as file:
-        json.dump(new_data, file, indent=4)
-    file.close()
-
-    if count == 1:
+        if res:
             message = 'item deleted successfully'
             code = 200
             status = 'success'
-            return jsonify({'message': message, 'code': code, 'status': status,'item':new_data}), code
-
-    else:
+            response = {'message': message, 'code': code, 'status': status,'items':todos}
+        else:
             message = 'no item with such id'
             code = 404
-            status = 'success'
-            jsonify({'message': message, 'code': code,
-                    'status': status}), code
+            status = 'fail'
+            response = {'message': message, 'code': code, 'status': status,'items':todos}
+
+    except Exception as e:
+        status = e.args[0]
+        message = ' Token missing please login'
+        code = 401
+        return jsonify({'message': message, 'status': status}), code
+
+    return jsonify(response), code
 
 
-    return jsonify({"message":'no item','code':200,'status':'success',"item":new_data})
-
-
-
+# done
 @app.route('/api/v1/complete-todo/<item_id>', methods=['PUT'])
 def complete_todo(item_id):
-    
-    token = request.headers['Authorization'].split(" ")[1]
-    payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
 
-    with open('data/todos.json', 'r') as file:
+    try:
+        token = request.headers['Authorization'].split(" ")[1]
+        payload = jwt.decode(
+            token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        item_found = {}
+        todos_sql = f"SELECT * FROM  todos WHERE  userId = {payload['userId']}"
+        cursor = mysql.connection.cursor()
+        cursor.execute(todos_sql)
+        todos = cursor.fetchall()
 
-
-        users_todo_json = json.load(file)
-
-        for todo in users_todo_json :
-
-            if todo['id'] == item_id :
-                found_todo = todo
+        for item in todos:
+            if item['id'] == int(item_id):
+                item_found = item
                 break
-        if found_todo :
-            found_todo['completed'] = True   
-             
-        else:
-            return jsonify ({'message':'no item'})
-        with open('./data/todos.json', 'w') as file:
-            json.dump(users_todo_json ,file, indent=4)
-        
 
-    file.close()
+        if item_found:
 
-    return jsonify({'message':'success','item':users_todo_json})
+            update_sql = f"UPDATE todos  SET completed = True WHERE  id = {item_found['id']}"
+            res = cursor.execute(update_sql)
+
+            updated_todos_sql = f"SELECT * FROM  todos WHERE  userId = {payload['userId']}"
+            cursor.execute(updated_todos_sql)
+            todos = cursor.fetchall()
+
+            cursor.connection.commit()
+            cursor.close()
+
+            if res == 1:
+                message = 'updated successfully'
+                code = 200
+                response = {'message': message, 'items': todos}
+            else:
+                message = 'already updated'
+                code = 200
+                response = {'message': message, 'items':  todos}
+
+    except Exception as e:
+        message = e.args[0]
+        code = 401
+        status = 'Fail'
+        response = {'message': message, 'status': status}
+        return jsonify(response), code
+
+    return jsonify({'response': response}), code
 
 
 @app.route('/api/v1/undo-todo/<item_id>', methods=['PUT'])
 def undo_todo(item_id):
-    
-    token = request.headers['Authorization'].split(" ")[1]
-    payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-    found_todo = {}
-    with open('data/todos.json', 'r') as file:
-        user_todo_json = json.load(file)
+    try:
+        token = request.headers['Authorization'].split(" ")[1]
+        payload = jwt.decode(
+            token, app.config['SECRET_KEY'], algorithms=["HS256"])
+        item_found = {}
+        todos_sql = f"SELECT * FROM  todos WHERE  userId = {payload['userId']}"
+        cursor = mysql.connection.cursor()
+        cursor.execute(todos_sql)
+        todos = cursor.fetchall()
 
-        for todo in user_todo_json:
-            if todo['id'] == item_id :
-                if todo['completed'] == True :
-                    found_todo = todo 
-                    break
-        if found_todo :
-            found_todo['completed'] = False
-        else:
-            message = 'no item',
-            code = 200,
-            status = 'success'
-            return jsonify({'message':message , 'status':status}),code 
-        
-        with open('./data/todos.json', 'w') as file:
-            json.dump(user_todo_json ,file, indent=4)
-    file.close()
+        for item in todos:
+            if item['id'] == int(item_id):
+                item_found = item
+                break
+        if item_found:
+            undo_sql = f"UPDATE todos SET completed = False where id = {item_found['id']}"
+            res = cursor.execute(undo_sql)
 
-    return jsonify({'message':'success','item':user_todo_json})
+            todo_sql = f"SELECT * FROM todos WHERE userId ={payload['userId']}"
+            cursor.execute(todo_sql)
+            todos = cursor.fetchall()
+
+            cursor.connection.commit()
+            cursor.close()
+
+            if res == 1:
+                message = 'updated successfully'
+                code = 200
+                response = {'message': message, 'items': todos}
+            else:
+                message = 'already updated'
+                code = 200
+                response = {'message': message, 'items':  todos}
+    except Exception as e:
+        message = e.args[0]
+        code = 401
+        status = 'Fail'
+        response = {'message': message, 'status': status}
+        return jsonify(response), code
+
+    return jsonify({'response': response}), code
 
 
-@app.route('/api/v1/show-item/<item_id>',methods=['GET'])
+@app.route('/api/v1/show-item/<item_id>', methods=['GET'])
 def show_item(item_id):
 
     token = request.headers['Authorization'].split(" ")[1]
     payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
     foundItem = {}
 
-    with open('data/todos.json', 'r') as file: 
-        user_todo_json = json.load(file)   
-        
+    with open('data/todos.json', 'r') as file:
+        user_todo_json = json.load(file)
+
         for todo in user_todo_json:
-            if todo['id'] == item_id :
+            if todo['id'] == item_id:
                 foundItem = todo
-        if foundItem :
-            return jsonify({'message':'found item','item':foundItem}),200
+        if foundItem:
+            return jsonify({'message': 'found item', 'item': foundItem}), 200
         else:
-            return jsonify({'message':'no item'})
+            return jsonify({'message': 'no item'})
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
-
-
-    

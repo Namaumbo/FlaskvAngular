@@ -44,7 +44,7 @@ export class TodoserviceService {
     return this.HttpClient.post<any>(apiUrl, body, { headers: headers })
   }
 
-  deleteATodo(id: string ) {
+  deleteTodo(id: string ) {
     let apiUrl = `${this.urlPrefix}/delete-todo/${id}`
     const token = localStorage.getItem('token')
 

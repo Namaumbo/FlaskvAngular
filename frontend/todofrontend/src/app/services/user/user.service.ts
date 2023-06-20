@@ -12,33 +12,27 @@ export class UserService {
   // urlPrefix = 'http://192.168.0.182:5000/api/v1'
   urlPrefix = 'http://127.0.0.1:5000/api/v1'
 
+  
+  public  errorMessage = ''
+  public username = ''
 
-  public userResObject: any = {}
-
-
-
-  userName = ''
   constructor(private HttpClient: HttpClient, public router: Router) {
   }
 
-  // getUserName() {
-  //   return this.userName;
-  // }
-  // setUserName(username: string) {
-  //   this.userName = username
-  // }
-  
 
   userLogin(userDetails: any) {
     let userAuth = `${this.urlPrefix}/login`
-    this.userResObject = {}
-    return this.HttpClient.post<any>(userAuth, userDetails).pipe(
-      tap((response) => {
-        localStorage.setItem('token', response.token)
-        this.router.navigate(['/home'])
-
-      })
-    )
+    this.HttpClient.post<any>(userAuth, userDetails).subscribe({
+      next : response  => {
+      this.username = response['response']['user']['username']
+      localStorage.setItem('username',this.username)
+      localStorage.setItem('token',response['response']['token'])
+      this.router.navigate(['/home'])
+      },
+      error : err => {
+        this.errorMessage = err.error.response.message
+      }
+    })  
   }
 
   isLoggedIn(): boolean {

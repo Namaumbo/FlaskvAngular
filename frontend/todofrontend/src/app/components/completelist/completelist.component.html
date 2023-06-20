@@ -1,52 +1,41 @@
 <div class="stats">
-  <h3>Total number of completed tasks : {{unDoneList.length}}</h3>
+  <h3>Total number of completed tasks : {{ this.todo.doneList.length}}</h3>
 </div>
 <div>
   <div class="wrapper">
     <div>
       <ul>
-        <li *ngFor="let i of this.todo.getUserData()">
-          <div class="card" *ngIf="!i['completed']">
+        <li *ngFor="let i of this.todo.userData">
+          <div class="card" *ngIf="i['completed']">
             <div class="card-body">
               <div id="span">
-                <span >
+                <span>
                   <span class="title">Title :</span>
                   {{ i["title"] }}
                   <br />
                   <span *ngIf="i.show">
                     <hr />
                     <span class="title">Description:</span>
-                    <span id="desc">  {{ i["description"] }}</span>
+                    <span id="desc"> {{ i["description"] }}</span>
                   </span>
                 </span>
               </div>
               <div class="btns">
                 <ul>
                   <li>
-                    <button
-                      type="button"
-                      class="btn btn-success btn-sm"
-                      (click)="handleComplete(i['id'])"
-                    >
-                      Done
+                    <button type="button" class="btn btn-success btn-sm"
+                      (click)="this.todo.undoTodo(i['id'])">
+                      Undo
                     </button>
                   </li>
                   <li>
-                    <button
-                      type="button"
-                      class="btn btn-primary btn-sm"
-                      (click)="i.show = !i.show"
-                    >
+                    <button type="button" class="btn btn-primary btn-sm" (click)="i.show = !i.show">
                       <span *ngIf="i.show">Hide</span>
                       <span *ngIf="!i.show">Show</span>
                     </button>
                   </li>
                   <li>
-                    <button
-                      type="button"
-                      class="btn btn-danger btn-sm"
-                      (click)="handleDelete(i['id'])"
-                    >
+                    <button type="button" class="btn btn-danger btn-sm" (click)="this.todo.deleteTodo(i['id'])">
                       Delete
                     </button>
                   </li>
