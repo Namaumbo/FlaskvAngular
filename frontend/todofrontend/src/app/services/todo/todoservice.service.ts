@@ -24,7 +24,7 @@ export class TodoserviceService {
 
 
   setUserData(data: any) {
-    this.userData = data
+    this.userData = data.reverse()
   }
 
   statistics() {
@@ -64,8 +64,6 @@ export class TodoserviceService {
       "title": title,
       "description": description
     }
-    console.log(body)
-
     return this.HttpClient.post('add-todo', body).subscribe((res : any) => {
       alert('successfully added')
       this.setUserData(res.items)

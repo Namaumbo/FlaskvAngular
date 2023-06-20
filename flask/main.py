@@ -120,7 +120,7 @@ def login():
         response = {"message": f"{e}", "status": "ERROR"}
         code = 500
 
-    return jsonify({'response': response,'token':token }), code
+    return jsonify(response), code
 
 
 # getting to do for a specific user
@@ -135,12 +135,8 @@ def get_user_todo_list():
     try:
 
         headers = request.headers
-
         if ('Authorization' in headers):
             token = headers['Authorization'].split(" ")[1]
-        else:
-            return jsonify({'message': 'Not Authorized', 'status': 'fail'}), 401
-
         payload = jwt.decode(
             token, app.config['SECRET_KEY'], algorithms=["HS256"])
 
@@ -161,7 +157,11 @@ def get_user_todo_list():
                         'message': message, 'items': []}
 
     except Exception as e:
-        return jsonify({'status': 'fail', 'message': e}), 401
+        code = 500
+        message = e.args[0]
+        status = 'fail'
+        response = {'status': status, 'message': message}
+
     return jsonify(response), code
 
 #  add  to do for a user
@@ -171,10 +171,7 @@ def get_user_todo_list():
 def add_to_do():
 
     try:
-        headers = request.headers
-        if ('Authorization' in headers):
-            token = headers['Authorization'].split(" ")[1]
-
+        token = request.headers['Authorization'].split(" ")[1]
         payload = jwt.decode(
             token, app.config['SECRET_KEY'], algorithms=["HS256"])
 
@@ -207,8 +204,11 @@ def add_to_do():
             response = {'message': message, 'status': status, 'items': todos}
 
     except Exception as e:
-        code = 500
-        return jsonify({'message': e.args[0], 'status': 'fail'}), code
+        code = 401
+        message = e.args[0]
+        status = 'fail'
+        description = 'Token is missing please login'
+        response = {'message': message, 'status': status,'description' : description}
 
     return jsonify(response), code
 
@@ -235,21 +235,23 @@ def delete_todo(item_id):
             message = 'item deleted successfully'
             code = 200
             status = 'success'
-            response = {'message': message, 'code': code, 'status': status,'items':todos}
+            response = {'message': message, 'code': code,
+                        'status': status, 'items': todos}
         else:
             message = 'no item with such id'
             code = 404
             status = 'fail'
-            response = {'message': message, 'code': code, 'status': status,'items':todos}
+            response = {'message': message, 'code': code,
+                        'status': status, 'items': todos}
 
     except Exception as e:
-        status = e.args[0]
-        message = ' Token missing please login'
+        status = 'fail'
+        description = ' Token missing please login'
+        message = e.args[0]
         code = 401
-        return jsonify({'message': message, 'status': status}), code
+        response = {'message': message, 'status': status , 'description' : description}
 
     return jsonify(response), code
-
 
 # done
 @app.route('/api/v1/complete-todo/<item_id>', methods=['PUT'])
@@ -292,13 +294,13 @@ def complete_todo(item_id):
                 response = {'message': message, 'items':  todos}
 
     except Exception as e:
+        status = 'fail'
+        description = ' Token missing please login'
         message = e.args[0]
         code = 401
-        status = 'Fail'
-        response = {'message': message, 'status': status}
-        return jsonify(response), code
+        response = {'message': message, 'status': status , 'description' : description}
 
-    return jsonify({'response': response}), code
+    return jsonify(response), code
 
 
 @app.route('/api/v1/undo-todo/<item_id>', methods=['PUT'])
@@ -336,33 +338,17 @@ def undo_todo(item_id):
                 message = 'already updated'
                 code = 200
                 response = {'message': message, 'items':  todos}
+
     except Exception as e:
+        print(e)
+        status = 'fail'
+        description = ' Token missing please login'
         message = e.args[0]
         code = 401
-        status = 'Fail'
-        response = {'message': message, 'status': status}
-        return jsonify(response), code
+        response = {'message': message, 'status': status , 'description' : description}
 
-    return jsonify({'response': response}), code
+    return jsonify(response), code
 
-
-@app.route('/api/v1/show-item/<item_id>', methods=['GET'])
-def show_item(item_id):
-
-    token = request.headers['Authorization'].split(" ")[1]
-    payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-    foundItem = {}
-
-    with open('data/todos.json', 'r') as file:
-        user_todo_json = json.load(file)
-
-        for todo in user_todo_json:
-            if todo['id'] == item_id:
-                foundItem = todo
-        if foundItem:
-            return jsonify({'message': 'found item', 'item': foundItem}), 200
-        else:
-            return jsonify({'message': 'no item'})
 
 
 if __name__ == '__main__':

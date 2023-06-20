@@ -41,54 +41,6 @@ export class HomeComponent {
     this.todo.addTodoToUser(this.todoTitle, this.todoDescription)
     this.todoTitle = ''
     this.todoDescription = ''
-    // this.todoTitle = ''
-    // this.noItem = ''
-    // todoDescription = ''
   }
-
-
-  // handleComplete(id: string) {
-  //   this.todo.completeAToDo(id).subscribe(res => {
-  //     this.todo.getUserList().subscribe(response => {
-
-  //       this.todo.setUserData(response.todos)
-
-  //       this.undoList = this.todo.getUserData().filter((item: any) => {
-  //         return item['completed'] == false
-  //       })
-  //       this.doneList = this.todo.getUserData().filter((item: any) => {
-  //         return item['completed'] == true
-  //       })
-
-  //     })
-  //   })
-  // }
-
-
-  // handleUndo(id: string) {
-  //   this.todo.uncompleteAToDo(id).subscribe(res => {
-  //     this.todo.getUserList().subscribe(resp => {
-
-  //       if (resp.todos.length == 0) {
-  //         this.todo.setUserData(resp.todos)
-  //         this.statistics()
-
-
-  //       } else {
-  //         this.todo.setUserData(resp.todos)
-  //         this.statistics()
-
-  //       }
-
-  //     })
-  //   })
-  // }
-  // handleShow(id: string) {
-  //   this.todo.showItem(id).subscribe(res => {
-  //     this.todoDescription = res.item.description
-  //   })
-
-  // }
-
 
 }
