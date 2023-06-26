@@ -13,7 +13,10 @@ import { UserService } from './services/user/user.service';
 import { AuthGuard } from './services/guards/auth.guard';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import {MatButtonModule} from '@angular/material'
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatBadgeModule} from '@angular/material/badge';
+import { TodosComponent } from './todos/todos.component';
+import { MaterialModule } from './material/material.module';
 
 
 @NgModule({
@@ -24,7 +27,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     UncompleteComponent,
     HomeComponent,
     LoginComponent,
-    NotfoundComponent
+    NotfoundComponent,
+    TodosComponent
   ],
   imports: [
     BrowserModule,
@@ -32,6 +36,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    MaterialModule
+  
 
 
   ],

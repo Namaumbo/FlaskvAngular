@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpService } from '../http/http.service';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ export class TodoserviceService {
   public todoTitle = "";
   public todoDescription = "";
   public condition = true;
+
 
 
   constructor(public HttpClient: HttpService) { }
@@ -36,14 +38,15 @@ export class TodoserviceService {
     })
   }
 
-
   checkUndone() {
     this.doneList = this.userData.filter((item: any) => {
       return item['completed'] == true
     })
   }
 
-
+loadData(){
+  return this.HttpClient.get('get-todo');
+}
   getUserList() {
     this.HttpClient.get('get-todo').subscribe((resp: any) => {
       if (resp.items.length == 0) {
@@ -56,6 +59,8 @@ export class TodoserviceService {
       this.statistics()
     })
   }
+
+
 
 
   addTodoToUser(title: string, description: string) {
@@ -110,4 +115,14 @@ export class TodoserviceService {
 
     })
   }
+
+  nextchunch(){
+
+  }
+  previouschunch(){
+
+  }
+
+
+  
 }

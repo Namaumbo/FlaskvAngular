@@ -11,22 +11,22 @@ import {Router } from '@angular/router';
 export class NavbarComponent {
 
   
-  public userName : any
+  public username : any
 
   constructor(public user: UserService,public todo : TodoserviceService, public router : Router) {
 
   }
 
   ngOnInit(){
-  // this.userName  = localStorage.getItem('username')
+  this.username  = localStorage.getItem('username')
   }
 
   handleLogOut() {
-    
-    localStorage.setItem('token','')
+    localStorage.clear()
     this.todo.setUserData({})
     this.router.navigate([''])
     this.user.errorMessage = ''
+   
 
 
   }

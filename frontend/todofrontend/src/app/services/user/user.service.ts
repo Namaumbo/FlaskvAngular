@@ -9,8 +9,8 @@ import { tap } from 'rxjs';
 export class UserService {
 
   //  
-  urlPrefix = 'http://192.168.0.182:5000/api/v1'
-  // urlPrefix = 'http://127.0.0.1:5000/api/v1'
+  // urlPrefix = 'http://192.168.0.182:5000/api/v1'
+  urlPrefix = 'http://127.0.0.1:3000/api/v1'
 
   
   public  errorMessage = ''
@@ -25,7 +25,7 @@ export class UserService {
     this.HttpClient.post<any>(userAuth, userDetails).subscribe({
       next : response  => {
       this.username = response['user']['username']
-      // localStorage.setItem('username',this.username)
+      localStorage.setItem('username',this.username)
       localStorage.setItem('token',response['token'])
       this.router.navigate(['/home'])
       },
@@ -44,6 +44,7 @@ export class UserService {
   }
 
   isLoggedOut(): boolean {
+    window.location.reload()
     localStorage.clear();
     return false
   }
