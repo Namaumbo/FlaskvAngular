@@ -35,7 +35,8 @@ export class TodoserviceService {
   setUserData(data: any) {
     // this.userData = []
     console.log('setUserData=> ',data)
-    this.userData = data.reverse()
+    // this.userData = data.reverse()
+    this.userData = data
   }
 
   statistics() {

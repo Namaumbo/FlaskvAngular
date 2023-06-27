@@ -1,9 +1,9 @@
 const mysql = require('mysql')
 const connection = mysql.createPool({
   connectionLimit:10,
-  host: 'localhost',
+  host: '192.168.0.182',
   user: 'root',
-  password: '',
+  password: 'qwerty12',
   database: 'todo_db',
  
 })
