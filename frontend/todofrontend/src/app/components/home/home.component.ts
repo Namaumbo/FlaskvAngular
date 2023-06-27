@@ -5,11 +5,11 @@ import { MatTableDataSource } from '@angular/material/table';
 
 
 
-export interface todo{
-  userId : number ,
-  id : number ,
-  title : string ,
-  description : string 
+export interface todo {
+  userId: number,
+  id: number,
+  title: string,
+  description: string
 
 }
 @Component({
@@ -17,16 +17,17 @@ export interface todo{
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit{
+export class HomeComponent implements OnInit {
 
- 
-  displayedColumns: string[] = [ 'title', 'weigh','actions' ];
+
+  displayedColumns: string[] = ['title', 'actions'];
   public todoTitle: string = ''
   public noItem: string = ''
   public todoDescription = ''
 
   @ViewChild(MatPaginator) paginator !: MatPaginator
   dataSource = new MatTableDataSource<todo>(this.todo.userData)
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
@@ -35,12 +36,26 @@ export class HomeComponent implements OnInit{
   ngOnInit() {
     this.todo.getUserList()
   }
+  refreshPage(){
+    console.log(this.todo.userData)
+    this.dataSource = new MatTableDataSource<todo>(this.todo.userData)
+    this.dataSource.paginator = this.paginator;
+    // console.log( this.dataSource)
+
+  }
 
   checkEnter() {
     this.handleAddTodo()
   }
-  
-  
+
+  handleModal(item: any) {
+
+    const myTitle = document.getElementById('title')
+    const myDescription = document.getElementById('description')
+    myTitle!.innerHTML = item['title']
+    myDescription!.innerHTML = item['description']
+
+  }
 
   handleAddTodo() {
 

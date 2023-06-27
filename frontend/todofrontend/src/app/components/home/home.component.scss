@@ -49,9 +49,9 @@
   max-width: 80%;
 }
 .btns {
-  margin-top: 1em;
-  align-self: end;
   ul {
+
+    text-align: center;
     li {
       display: inline;
       margin-left: 3px;
@@ -75,7 +75,6 @@ li {
 }
 
 .list {
-
   .card {
     width: 85%;
     margin: 5px auto;
@@ -87,9 +86,10 @@ li {
   padding: 10px;
   justify-content: center;
   ul {
-
-    li {
     
+    li {
+      display: flex;
+    justify-content: center;
       h5 {
         font-size: 20px;
       }
@@ -110,35 +110,50 @@ li {
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
-  width: 97%;
- 
+  width: 90%;
 }
-.Page{
+.Page {
   margin-top: 20px;
   display: flex;
   justify-content: center;
 }
-.table-main{
+.table-main {
   display: flex;
   justify-content: center;
   height: 30em;
   overflow: hidden;
   // overflow-y: scroll
 }
-tbody{
-  
-}
 
-td, th {
+td,
+th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
 }
 
-
 tr:nth-child(even) {
   background-color: #efefef;
 }
-mat-table{
-  width: 100%;
+
+.mat-elevation-z8{
+  width: 95%;
+  margin: auto;
+}
+#Filter{
+  margin-left: 46px;
+  width: 95%;
+}
+.titles{
+  text-align: center;
+}
+.descriptions{
+  text-align: center;
+
+}
+.navs{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
 }

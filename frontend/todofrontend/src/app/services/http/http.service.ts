@@ -36,14 +36,14 @@ export class HttpService {
     }
   }
 
-  public get(endpoint: string) {
+  public get(endpoint: string, limit: number, page: number) {
     const header = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${this.getToken()}`);
     const httpOptions = {
       headers: header
     };
-    return this.http.get(`${this.backendUrl}/${endpoint}`, httpOptions);
+    return this.http.get(`${this.backendUrl}/${endpoint}?limit=${limit}&page=${page} `, httpOptions);
   }
 
   public getCall(endpoint: string) {
@@ -69,7 +69,7 @@ export class HttpService {
   public delete_data(endpoint: string, data: any) {
     const header = new HttpHeaders()
       .set('Content-Type', 'application/json')
-      .set('Cross-origin', '*' )
+      .set('Cross-origin', '*')
       .set('Authorization', `Bearer ${this.getToken()}`);
     const httpOptions = {
       headers: header
@@ -78,9 +78,9 @@ export class HttpService {
   }
 
   public delete(endpoint: string) {
-  
 
-  const  header = new HttpHeaders()
+
+    const header = new HttpHeaders()
       .set('Content-Type', 'application/json')
       .set('Authorization', `Bearer ${this.getToken()}`);
 
