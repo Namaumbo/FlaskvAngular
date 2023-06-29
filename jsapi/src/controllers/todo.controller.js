@@ -14,6 +14,7 @@ exports.getTodo = async (req, res, next) => {
     const page = req.query.page ? parseInt(req.query.page) : 0;
 
     const offSet = (page - 1) * limit;
+    
     const todos = await new Promise((resolve, reject) => {
       cnxn.query(
         "select * from todos  where userId = ? limit ? offset ?",
@@ -26,6 +27,7 @@ exports.getTodo = async (req, res, next) => {
     });
 
     if (todos.length > 0) {
+
       const totalPages = await new Promise((resolve, reject) => {
         cnxn.query("select count(*) as count from todos ", (err, res) => {
           resolve(res);
@@ -39,6 +41,7 @@ exports.getTodo = async (req, res, next) => {
           limit: limit,
           totalPages: totalPage,
         },
+        totalItems : totalPages[0].count ,
         items: todos,
      
       });

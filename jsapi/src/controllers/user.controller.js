@@ -4,29 +4,37 @@ const { UnprocessedEntities } = require("../errors/Errors");
 const jwt = require("jsonwebtoken");
 exports.login = async (req, res, next) => {
   try {
-    conxn.query(
-      `select * from users where username = ? and password =  ?`,
-      [req.body["username"], req.body["password"]],
-      (err, result) => {
-        if (result.length != 0) {
-          const token = jwt.sign(
-            {
-              id: result[0].id,
-            },
-            "wertyuisdfgvjkl****wertyu/."
-          );
-          return res.status(200).json({
-            message: "log in successful",
-            status: "success",
-            token: token,
-            user: result[0],
-          });
-        } else {
-          next(new UnprocessedEntities("wrong username or password"));
-        }
+    const username = req.body["username"];
+    const password = req.body["password"];
+
+    if (username != null && password != null) {
+      const userFound = await new Promise((resolve, reject) => {
+        conxn.query(
+          `select * from users where username = ? and password = ?`,
+          [username, password],
+          (err, resp) => {
+            if (resp) resolve(resp);
+            else res.json({ err: err, description: "connection refused" });
+          }
+        );
+      });
+      if (userFound.length != 0) {
+        const token = jwt.sign(
+          {
+            id: userFound[0].id,
+          },
+          "wertyuisdfgvjkl****wertyu/."
+        );
+        return res.status(200).json({
+          message: "log in successful",
+          status: "success",
+          token: token,
+          user: userFound[0],
+        });
       }
-    );
+      next(new UnprocessedEntities("wrong username or password"));
+    }
   } catch (error) {
-    next(new UnprocessedEntities("Invalid password"));
+    next(new UnprocessedEntities("wrong details provided"));
   }
 };
