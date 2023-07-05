@@ -34,18 +34,45 @@ li {
     }
   }
 }
-.stats{
+.stats {
   text-align: center;
- 
 }
-h3{
+h3 {
   font-size: 18px;
   font-weight: bold;
   text-align: center;
 }
-.title{
+.title {
   color: gray;
 }
-#desc{
-font-style: italic;
+#desc {
+  font-style: italic;
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 70%;
+  margin: auto;
+}
+
+td,
+th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+tbody {
+  tr:nth-child(even) {
+      background-color: #efefef;
+    
+  }
+}
+
+.titles {
+  text-align: center;
+}
+.btns {
+  text-align: center;
+  margin-top: 5px;
 }

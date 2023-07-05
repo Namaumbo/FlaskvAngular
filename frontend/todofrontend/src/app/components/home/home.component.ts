@@ -1,15 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TodoserviceService } from '../../services/todo/todoservice.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-
-
-
 export interface todo {
   userId: number,
   id: number,
   title: string,
   description: string
+
 
 }
 @Component({
@@ -24,38 +20,19 @@ export class HomeComponent implements OnInit {
   public todoTitle: string = ''
   public noItem: string = ''
   public todoDescription = ''
+  public searchValue: string = ''
+  public data : any  =  []
 
-  @ViewChild(MatPaginator) paginator !: MatPaginator
-  dataSource = new MatTableDataSource<todo>(this.todo.userData)
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-  }
   constructor(public todo: TodoserviceService) {
   }
   ngOnInit() {
     this.todo.getUserList()
-  }
-  refreshPage(){
-    console.log(this.todo.userData)
-    this.dataSource = new MatTableDataSource<todo>(this.todo.userData)
-    this.dataSource.paginator = this.paginator;
-    // console.log( this.dataSource)
-
   }
 
   checkEnter() {
     this.handleAddTodo()
   }
 
-  handleModal(item: any) {
-
-    const myTitle = document.getElementById('title')
-    const myDescription = document.getElementById('description')
-    myTitle!.innerHTML = item['title']
-    myDescription!.innerHTML = item['description']
-
-  }
 
   handleAddTodo() {
 
@@ -72,10 +49,15 @@ export class HomeComponent implements OnInit {
     this.todoTitle = ''
     this.todoDescription = ''
   }
-  applyFilter(event: Event) {
 
+  
+  applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.data = this.todo.userData.filter((todo: any) => {
+      todo['title'] == filterValue
+    }
+    )
+
   }
 
 }

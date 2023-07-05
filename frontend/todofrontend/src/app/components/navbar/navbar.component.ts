@@ -12,6 +12,7 @@ export class NavbarComponent {
 
   
   public username : any
+  public searchValue : string = ''
 
   constructor(public user: UserService,public todo : TodoserviceService, public router : Router) {
 
@@ -22,12 +23,10 @@ export class NavbarComponent {
   }
 
   handleLogOut() {
+    window.location.reload()
     localStorage.clear()
     this.todo.setUserData({})
     this.router.navigate([''])
-    this.user.errorMessage = ''
-   
-
-
   }
+
 }

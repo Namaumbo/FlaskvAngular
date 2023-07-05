@@ -50,7 +50,6 @@
 }
 .btns {
   ul {
-
     text-align: center;
     li {
       display: inline;
@@ -86,10 +85,14 @@ li {
   padding: 10px;
   justify-content: center;
   ul {
-    
+    li:nth-child(even) {
+      margin-left: 15px;
+      margin-right: 15px;
+    }
     li {
       display: flex;
-    justify-content: center;
+      justify-content: center;
+
       h5 {
         font-size: 20px;
       }
@@ -110,19 +113,13 @@ li {
 table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
-  width: 90%;
+  width: 95%;
+  margin: auto;
 }
 .Page {
   margin-top: 20px;
   display: flex;
   justify-content: center;
-}
-.table-main {
-  display: flex;
-  justify-content: center;
-  height: 30em;
-  overflow: hidden;
-  // overflow-y: scroll
 }
 
 td,
@@ -136,24 +133,35 @@ tr:nth-child(even) {
   background-color: #efefef;
 }
 
-.mat-elevation-z8{
-  width: 95%;
-  margin: auto;
-}
-#Filter{
-  margin-left: 46px;
-  width: 95%;
-}
-.titles{
+.titles {
   text-align: center;
 }
-.descriptions{
+.descriptions {
   text-align: center;
-
 }
-.navs{
+.navs {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   background-color: white;
+  margin-top: 10px;
+  span {
+    margin-left: 10px;
+  }
+}
+#search {
+  width: 95%;
+  margin: auto auto 10px auto;
+}
+#noItem {
+  text-align: center;
+}
+
+.page-link{
+  cursor: pointer;
+}
+.active{
+  background-color: blue;
+  padding:10px;
+  color:white
 }

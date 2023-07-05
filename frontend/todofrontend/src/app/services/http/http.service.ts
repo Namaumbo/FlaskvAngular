@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 export class HttpService {
 
   public backendUrl = 'http://127.0.0.1:3000/api/v1'; //this is the URL for the backend server in production
-  // public backendUrl = 'http://192.168.0.182:5000/api/v1'
+  // public backendUrl = 'http://192.168.0.182:3000/api/v1'
   constructor(
     private http: HttpClient,
   ) { }
@@ -46,6 +46,18 @@ export class HttpService {
     return this.http.get(`${this.backendUrl}/${endpoint}?limit=${limit}&page=${page} `, httpOptions);
   }
 
+  public search(endpoint: string ,data : any , limit: number, page: number) {
+
+    const header = new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('Authorization', `Bearer ${this.getToken()}`);
+    const httpOptions = {
+      headers: header
+    };
+    return this.http.post(`${this.backendUrl}/${endpoint}?limit=${limit}&page=${page}`,data, httpOptions)
+  }
+
+
   public getCall(endpoint: string) {
     const header = new HttpHeaders()
       .set('Content-Type', 'application/json')
@@ -66,6 +78,7 @@ export class HttpService {
     return this.http.post(`${this.backendUrl}/${endpoint}`, data, httpOptions);
   }
 
+
   public delete_data(endpoint: string, data: any) {
     const header = new HttpHeaders()
       .set('Content-Type', 'application/json')
@@ -78,7 +91,6 @@ export class HttpService {
   }
 
   public delete(endpoint: string) {
-
 
     const header = new HttpHeaders()
       .set('Content-Type', 'application/json')

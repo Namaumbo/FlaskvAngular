@@ -38,4 +38,29 @@ nav {
     background-color: #053c6f;
     border: 1px solid #00305e;
   }
+ 
+  .input-bar{
+    display: flex;
+    align-items: center;
+  }
+  .form-control{
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    width: 20em;
+
+
+    // border-radius: 10px;
+  }
+  .icon{
+    border: 1px solid #dee2e6;
+  padding :8px;
+  cursor: pointer;
+
+
+  }
+ 
+  #basic-search{
+  }
 }

@@ -9,7 +9,7 @@ import { tap } from 'rxjs';
 export class UserService {
 
   //  
-  // urlPrefix = 'http://192.168.0.182:5000/api/v1'
+  // urlPrefix = 'http://192.168.0.182:3000/api/v1'
   urlPrefix = 'http://127.0.0.1:3000/api/v1'
 
   
@@ -18,8 +18,6 @@ export class UserService {
 
   constructor(private HttpClient: HttpClient, public router: Router) {
   }
-
-
   userLogin(userDetails: any) {
     let userAuth = `${this.urlPrefix}/login`
     this.HttpClient.post<any>(userAuth, userDetails).subscribe({
@@ -30,7 +28,8 @@ export class UserService {
       this.router.navigate(['/home'])
       },
       error : err => {
-        this.errorMessage = err.error.response.message
+        console.log(err)
+        this.errorMessage = 'wrong password and username'
       }
     })  
   }

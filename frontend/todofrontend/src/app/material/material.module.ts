@@ -7,6 +7,7 @@ import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field'
+import {NgxPaginationModule} from 'ngx-pagination'; 
 
 
 
@@ -17,7 +18,8 @@ const MaterialComponents = [
   MatFormFieldModule,
   MatSortModule,
   MatFormFieldModule,
-  MatInputModule
+  MatInputModule,
+  NgxPaginationModule
 
 ]
 
