@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { HttpService } from '../http/http.service';
 import { MatTableDataSource } from '@angular/material/table';
-
+import { DOCUMENT } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,11 @@ export class TodoserviceService {
   public todoTitle = "";
   public todoDescription = "";
   public condition = true;
-  totalpages : any = 0
+
+
+  totalpages: any = 0
   userData: any = [];
+
   public done_count = 0
   public todo_count = 0
   public undoList = []
@@ -22,20 +25,22 @@ export class TodoserviceService {
   public totalItems: number = 0
   limit = 50
   page = 1
-  buttonArray : any
+  buttonArray: any
 
 
   public searchValue: string = ''
   public searchResults: any = []
-  public searchPage = 1 
+  public searchPage = 1
   public searchLimit = 20
   public totalNumberOfPages = 0
   public totalSearchedItems = 0
   public totalCompleteSearchedItems = 0
   public totalIncompleteSearchItems = 0
   public searchActiveCondition = false
+  public pages : any = []
 
-  constructor(public HttpClient: HttpService) { }
+
+  constructor(public HttpClient: HttpService, @Inject(DOCUMENT) private dom: Document) { }
   setUserData(data: any) {
     this.userData = data
   }
@@ -79,7 +84,10 @@ export class TodoserviceService {
 
       this.setUserData(resp.items.reverse())
       this.page = resp.pagination.page
-      this.totalpages = resp.pagination.totalPages
+      setTimeout(()=>{
+        this.totalpages = this.pagination(this.page,resp.pagination.totalPages)
+        console.log(resp.items)
+      },500)
       this.totalItems = resp.totalItems
       this.checkUndone()
       this.statistics()
@@ -100,8 +108,8 @@ export class TodoserviceService {
     this.searchPage = this.searchPage + 1
     this.handleSearch()
   }
-  handlePreviousSearchPage = () =>{
-    this.searchPage = this.searchPage -1
+  handlePreviousSearchPage = () => {
+    this.searchPage = this.searchPage - 1
     this.handleSearch()
   }
 
@@ -157,15 +165,19 @@ export class TodoserviceService {
     let body = {
       'title': this.searchValue
     }
+    
+    setTimeout(()=>{
+      this.pages = this.pagination(this.searchPage,this.totalNumberOfPages)
+    },500)
 
-    this.HttpClient.search('search-todo', body , this.searchLimit, this.searchPage).subscribe({
+    this.HttpClient.search('search-todo', body, this.searchLimit, this.searchPage).subscribe({
       next: ((res: any) => {
         console.log(res.pagination['page'])
         this.searchResults = res.items
         this.totalSearchedItems = res.numberOfItems
         this.totalNumberOfPages = res.pagination['totalPages']
-        this.buttonArray = Array.from({length :this.totalNumberOfPages}, (_, index) => index + 1);
-      
+        // this.buttonArray = Array.from({ length: this.totalNumberOfPages }, (_, index) => index + 1);
+
       }),
       error: ((err: any) => {
         console.log(err)
@@ -182,10 +194,47 @@ export class TodoserviceService {
       return false
     }
   }
-  activatePage(page : number){
+  activatePage(page: number) {
+
+    window.scrollTo(0, 300);
     this.searchPage = page
     this.handleSearch()
+  }
 
+  currentPage(page: number){
+    window.scrollTo(0, 300);
+    this.page = page
+    this.getUserList()
+  }
 
+ pagination(c: any, m: any) {
+    let current = c
+    let last = m
+    let delta = 2
+    let left = current - delta
+    let right = current + delta + 1
+    let range = []
+    let rangeWithDots = []
+    let l;
+
+    for (let i = 1; i <= last; i++) {
+      if (i == 1 || i == last || i >= left && i < right) {
+        range.push(i);
+      }
+    }
+
+    for (let i of range) {
+      if (l) {
+        if (i - l === 2) {
+          rangeWithDots.push(l + 1);
+        } else if (i - l !== 1) {
+          rangeWithDots.push('...');
+        }
+      }
+      rangeWithDots.push(i);
+      l = i;
+    }
+   
+    return rangeWithDots;
   }
 }

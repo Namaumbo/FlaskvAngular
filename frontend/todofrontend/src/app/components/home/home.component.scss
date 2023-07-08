@@ -146,7 +146,7 @@ tr:nth-child(even) {
   background-color: white;
   margin-top: 10px;
   span {
-    margin-left: 10px;
+    // margin-left: 10px;
   }
 }
 #search {
@@ -161,7 +161,6 @@ tr:nth-child(even) {
   cursor: pointer;
 }
 .active{
-  background-color: blue;
-  padding:10px;
+  background-color: rgb(51, 51, 253);
   color:white
 }

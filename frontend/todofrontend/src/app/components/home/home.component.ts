@@ -1,5 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit,  Inject} from '@angular/core';
 import { TodoserviceService } from '../../services/todo/todoservice.service';
+import { DOCUMENT } from '@angular/common';
+
 export interface todo {
   userId: number,
   id: number,
@@ -27,6 +29,7 @@ export class HomeComponent implements OnInit {
   }
   ngOnInit() {
     this.todo.getUserList()
+    
   }
 
   checkEnter() {
@@ -50,14 +53,5 @@ export class HomeComponent implements OnInit {
     this.todoDescription = ''
   }
 
-  
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.data = this.todo.userData.filter((todo: any) => {
-      todo['title'] == filterValue
-    }
-    )
-
-  }
 
 }
