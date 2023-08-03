@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { UserService } from '../../services/user/user.service';
-import { TodoserviceService } from '../../services/todo/todoservice.service';
 import {Router } from '@angular/router';
+import { TodoserviceService } from 'src/app/services/todo/todoservice.service';
 
 @Component({
   selector: 'app-navbar',
@@ -14,7 +14,7 @@ export class NavbarComponent {
   public username : any
   public searchValue : string = ''
 
-  constructor(public user: UserService,public todo : TodoserviceService, public router : Router) {
+  constructor(public user: UserService, public router : Router , public todo: TodoserviceService) {
 
   }
 
@@ -25,7 +25,6 @@ export class NavbarComponent {
   handleLogOut() {
     window.location.reload()
     localStorage.clear()
-    this.todo.setUserData({})
     this.router.navigate([''])
   }
 

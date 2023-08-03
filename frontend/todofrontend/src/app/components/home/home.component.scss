@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .main {
   width: 85%;
   margin: 0 auto;
@@ -148,8 +149,14 @@ tr:nth-child(even) {
 }
 
 .page-link{
+=======
+img{
+  width: 150px;
+>>>>>>> ea19e3668a5af265df57670c4d9b5f29c5e284d8
   cursor: pointer;
+  height: 150px;
 }
+<<<<<<< HEAD
 .active{
   background-color: rgb(51, 51, 253);
   color:white
@@ -170,4 +177,8 @@ tr:nth-child(even) {
   margin-top: 15em;
   margin-left:-9em
  
+=======
+.container{
+  width: fit-content;
+>>>>>>> ea19e3668a5af265df57670c4d9b5f29c5e284d8
 }

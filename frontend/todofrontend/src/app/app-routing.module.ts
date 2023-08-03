@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from './components/login/login.component';
 import { CompletelistComponent } from './components/completelist/completelist.component';
 import { UncompleteComponent } from './components/uncomplete/uncomplete.component';
 import { HomeComponent } from './components/home/home.component';
@@ -14,12 +13,12 @@ const routes: Routes = [
     component: HomeComponent
   },
   {
-    path: 'completed',
+    path: 'files',
     component: CompletelistComponent,
     canActivate:[AuthGuard]
 
   }, {
-    path: 'uncompleted',
+    path: 'audio',
     component: UncompleteComponent,
     canActivate:[AuthGuard]
   },
@@ -38,7 +37,6 @@ const routes: Routes = [
     component : NotfoundComponent,
     canActivate:[AuthGuard]
   },
-
 
 ];
 

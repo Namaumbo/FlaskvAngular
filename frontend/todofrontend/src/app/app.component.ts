@@ -1,9 +1,5 @@
 import { Component,OnInit, ViewChild } from '@angular/core';
 import { UserService } from './services/user/user.service';
-
-import { TodoserviceService } from './services/todo/todoservice.service';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
 import { filter } from 'rxjs';
 
 export interface todoInterface {
@@ -19,19 +15,17 @@ export interface todoInterface {
 })
 export class AppComponent implements OnInit {
 
-  displayedColumns: string[] = ['position',  'name', 'actions']
-  dataSource = new MatTableDataSource(this.todo.userData)
-  title = 'Todo';
-  
 
   constructor(
     public user: UserService,
-    public todo: TodoserviceService
   ) {
 
   }
   ngOnInit() {
+<<<<<<< HEAD
     this.todo.getTodoList()
+=======
+>>>>>>> ea19e3668a5af265df57670c4d9b5f29c5e284d8
   }
 
  
