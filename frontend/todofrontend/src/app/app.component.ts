@@ -1,6 +1,7 @@
 import { Component,OnInit, ViewChild } from '@angular/core';
 import { UserService } from './services/user/user.service';
 import { filter } from 'rxjs';
+import { TodoserviceService } from './services/todo/todoservice.service';
 
 export interface todoInterface {
  title:string,
@@ -18,14 +19,13 @@ export class AppComponent implements OnInit {
 
   constructor(
     public user: UserService,
+    public todo: TodoserviceService
+
   ) {
 
   }
   ngOnInit() {
-<<<<<<< HEAD
     this.todo.getTodoList()
-=======
->>>>>>> ea19e3668a5af265df57670c4d9b5f29c5e284d8
   }
 
  

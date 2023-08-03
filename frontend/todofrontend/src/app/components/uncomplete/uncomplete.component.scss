@@ -1,35 +1,45 @@
-.main{
-display: flex;
-justify-content: center;  
+
+.wrapper {
+  margin: auto;
 }
-ul li{
-  list-style-type: none;
-  padding : 10px;
+.container-fluid {
+  display: flex;
+}
+li {
+  list-style: none;
+  margin-top: 7px;
+}
+li {
+  display: flex;
+}
+#span {
+  max-width: 45em;
+}
+.card {
+  width: 90%;
+  margin: 5px auto;
+}
+.card-body {
   display: flex;
   justify-content: space-between;
-  width:450px;
-  align-items: center;
 }
-h1{
-  font-size: 18px;
+.btns {
+  ul {
+    
+    li {
+      display: inline;
+      margin-left: 1px;
+    }
+  }
+}
+.stats{
   text-align: center;
-
-}
-
-.player {
-  position: absolute;
-  bottom: 0;
-}
-audio{
-  width: 91em
-}
-img{
-  width: 20px;
-  margin-left: 10px;
+ 
 }
 h3{
-  font-size: 20px;
-  margin-left: 3%
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
 }
 .title{
   color: gray;
