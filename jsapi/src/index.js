@@ -5,7 +5,7 @@ const helmet = require("helmet");
 const logger = require("morgan");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const dotenv = require("dotenv");
+// const dotenv = require("dotenv");
 
 const app = express();
 app.use(logger("combined"));

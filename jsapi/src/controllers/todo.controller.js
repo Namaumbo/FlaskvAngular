@@ -10,14 +10,17 @@ exports.getTodo = async (req, res, next) => {
   try {
     const token = req.headers["authorization"].split(" ")[1];
     const decoded = jwt.verify(token, "wertyuisdfgvjkl****wertyu/.");
+
     const limit = req.query.limit ? parseInt(req.query.limit) : 0;
     const page = req.query.page ? parseInt(req.query.page) : 0;
 
     const offSet = (page - 1) * limit;
-    
+
     const todos = await new Promise((resolve, reject) => {
       cnxn.query(
-        "select * from todos  where userId = ? limit ? offset ?",
+        "select * from todos  where userId = ? order by field(!completed , '') limit ? offset ?",
+        // "select * from todos  where userId = ? limit ? offset ?",
+
         [decoded["id"], limit, offSet],
         (err, resp) => {
           if (resp) resolve(resp);
@@ -26,28 +29,209 @@ exports.getTodo = async (req, res, next) => {
       );
     });
 
-    if (todos.length > 0) {
+    // get for one user only not every todo in the db
+    console.log(todos)
 
+    if (todos.length > 0) {
       const totalPages = await new Promise((resolve, reject) => {
-        cnxn.query("select count(*) as count from todos ", (err, res) => {
-          resolve(res);
-          reject(err);
+        cnxn.query("select count(*) as count from todos  where userId = ?",[decoded['id']], (err, res) => {
+          if (res) {
+            resolve(res);
+          } else {
+            reject(err);
+          }
         });
       });
       const totalPage = Math.ceil(totalPages[0].count / limit);
-      res.json({
-        pagination: {
-          page,
-          limit: limit,
-          totalPages: totalPage,
-        },
-        totalItems : totalPages[0].count ,
-        items: todos,
-     
-      });
+      res
+        .json({
+          pagination: {
+            page: page,
+            limit: limit,
+            totalPages: totalPage,
+          },
+          totalItems: totalPages[0].count,
+          items: todos,
+        })
+        .status(200);
     }
   } catch (err) {
     if (err.name === "JsonWebTokenError") next(new NotAuthorizedError());
+    else next(new AppError(err));
+  }
+};
+
+exports.getDoneTodo = async (req, res, next) => {
+  try {
+    const token = req.headers["authorization"].split(" ")[1];
+    const decoded = jwt.verify(token, "wertyuisdfgvjkl****wertyu/.");
+    
+
+    const limit = req.query.limit ? parseInt(req.query.limit) : 0;
+    const page = req.query.page ? parseInt(req.query.page) : 0;
+
+    const offSet = (page - 1) * limit;
+
+    const doneTodoList = await new Promise((resolve, reject) => {
+      cnxn.query(
+        "select * from todos where userId = ? and completed = true limit ? offset ?",[decoded['id'], limit ,offSet],
+        (err, res) => {
+          if (res) {
+            resolve(res);
+          } else {
+            reject(err);
+          }
+        }
+      );
+    });
+    if(doneTodoList.length > 0) {
+      const numDoneTodoList = await new Promise((resolve, reject) => {
+        cnxn.query(
+          "select count(*) as count from todos where userId = ? and completed = true ",[decoded['id']],
+          (err, res) => {
+            if (res) {
+              resolve(res);
+            } else {
+              reject(err);
+            }
+          }
+        );
+      });
+      const totalPage = Math.ceil(numDoneTodoList[0].count / limit)
+     res.json({
+      pagination: {
+        page: page,
+        limit: limit,
+        totalPages: totalPage,
+      },
+        totalNumber : numDoneTodoList[0].count,
+        items: doneTodoList,
+      });
+    }
+    
+
+  } catch (err) {
+    next(new AppError(err));
+  }
+};
+
+exports.getIncompleteTodo = async (req , res , next) => {
+
+  try {
+    const token = req.headers["authorization"].split(" ")[1];
+    const decoded = jwt.verify(token, "wertyuisdfgvjkl****wertyu/.");
+    
+
+    const limit = req.query.limit ? parseInt(req.query.limit) : 0;
+    const page = req.query.page ? parseInt(req.query.page) : 0;
+
+    const offSet = (page - 1) * limit;
+
+    const doneTodoList = await new Promise((resolve, reject) => {
+      cnxn.query(
+        "select * from todos where userId = ? and completed = false limit ? offset ?",[decoded['id'], limit ,offSet],
+        (err, res) => {
+          if (res) {
+            resolve(res);
+          } else {
+            reject(err);
+          }
+        }
+      );
+    });
+    if(doneTodoList.length > 0) {
+      const numDoneTodoList = await new Promise((resolve, reject) => {
+        cnxn.query(
+          "select count(*) as count from todos where userId = ? and completed = false ",[decoded['id']],
+          (err, res) => {
+            if (res) {
+              resolve(res);
+            } else {
+              reject(err);
+            }
+          }
+        );
+      });
+      const totalPage = Math.ceil(numDoneTodoList[0].count / limit)
+     res.json({
+      pagination: {
+        page: page,
+        limit: limit,
+        totalPages: totalPage,
+      },
+        totalNumber : numDoneTodoList[0].count,
+        items: doneTodoList,
+      });
+    }
+    
+
+  } catch (err) {
+    next(new AppError(err));
+  }
+
+}
+exports.searchForAnItem = async (req, res, next) => {
+  try {
+    const { title } = req.body;
+    const token = req.headers["authorization"].split(" ")[1];
+
+    const limit = req.query.limit ? parseInt(req.query.limit) : 0;
+    const page = req.query.page ? parseInt(req.query.page) : 0;
+    const offSet = (page - 1) * limit;
+
+    if (token) {
+      const decoded = jwt.verify(token, "wertyuisdfgvjkl****wertyu/.");
+      const searchResults = await new Promise((resolve, reject) => {
+        cnxn.query(
+          `SELECT * FROM todos where title LIKE CONCAT(?,'%') and userId = ? limit ? offset ?`,
+          [title, decoded["id"], limit, offSet],
+          (err, results) => {
+            if (results) {
+              resolve(results);
+            } else reject(err);
+          }
+        );
+      });
+      if (searchResults.length > 0) {
+        const totalNumOfItems = await new Promise((resolve, reject) => {
+          cnxn.query(
+            "select count(*) as count from todos where title like concat(?,'%') and userId = ?",
+            [title, decoded["id"]],
+            (err, resp) => {
+              if (resp) {
+                resolve(resp);
+              } else {
+                reject(err);
+              }
+            }
+          );
+        });
+        const totalPage = Math.ceil(totalNumOfItems[0].count / limit);
+
+        res
+          .json({
+            message: "success",
+            numberOfItems: totalNumOfItems[0].count,
+            pagination: {
+              page: page,
+              limit: limit,
+              totalPages: totalPage,
+            },
+            items: searchResults,
+          })
+          .status(200);
+      } else {
+        res.json({
+          message: 'fail',
+          numberOfItems : 0,
+          items:searchResults,
+          totalPages: ''
+
+        }).status(200)
+      }
+    }
+  } catch (error) {
+    next(new AppError(error));
   }
 };
 
@@ -197,7 +381,7 @@ exports.undo = async (req, res, next) => {
 };
 
 exports.seeding = async (req, res, next) => {
-  const numberOfItems = 50000;
+  const numberOfItems = 100000;
   console.log(
     "-----------------------starting seeding------------------------"
   );

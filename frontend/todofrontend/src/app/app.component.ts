@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
 
   }
   ngOnInit() {
-    this.todo.getUserList()
+    this.todo.getTodoList()
   }
 
  

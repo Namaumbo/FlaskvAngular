@@ -6,6 +6,7 @@ import { UncompleteComponent } from './components/uncomplete/uncomplete.componen
 import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './services/guards/auth.guard';
 import { NotfoundComponent } from './components/notfound/notfound.component';
+import { SearchComponent } from './components/search/search.component';
 
 const routes: Routes = [
   {
@@ -28,10 +29,17 @@ const routes: Routes = [
     canActivate:[AuthGuard]
   },
   {
+    path:'search',
+    component:SearchComponent,
+    canActivate:[AuthGuard]
+  },
+  {
     path:'**',
     component : NotfoundComponent,
     canActivate:[AuthGuard]
-  }
+  },
+  
+ 
 
 
 ];

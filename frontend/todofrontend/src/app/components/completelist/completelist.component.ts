@@ -12,6 +12,7 @@ export class CompletelistComponent {
   constructor(public todo: TodoserviceService) { }
 
   ngOnInit() {
-    // this.todo.getUserList()
+    this.todo.getCompleteList()
+    console.log(this.todo.totalCompletedList)
   }
 }

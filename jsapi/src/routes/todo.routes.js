@@ -12,5 +12,11 @@ router.delete("/delete-todo/:id", todoController.deleteTodo);
 
 router.post("/add-todo", todoController.addTodo);
 
+router.post('/search-todo', todoController.searchForAnItem)
+
 router.post("/seed-todo", todoController.seeding)
+
+router.get("/get-incomplete" , todoController.getIncompleteTodo)
+
+router.get("/get-done" , todoController.getDoneTodo)
 module.exports = router;

@@ -76,3 +76,34 @@ tbody {
   text-align: center;
   margin-top: 5px;
 }
+.loader {
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.331);
+}
+.message{
+  font-weight: bolder;
+  color:  white;
+  font-size: 20px;
+  margin-top: 15em;
+  margin-left:-9em
+ 
+}
+.navs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  margin-top: 10px;
+  .page-link{
+    cursor: pointer;
+  }
+  span {
+    // margin-left: 10px;
+  }
+  
+}

@@ -12,6 +12,6 @@ export class UncompleteComponent {
   constructor(public todo: TodoserviceService) { }
 
   ngOnInit() {
-    // this.todo.getUserList()
+    this.todo.getIncompleteList()
   }
 }

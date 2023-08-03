@@ -8,6 +8,7 @@ import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field'
 import {NgxPaginationModule} from 'ngx-pagination'; 
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 
@@ -19,8 +20,8 @@ const MaterialComponents = [
   MatSortModule,
   MatFormFieldModule,
   MatInputModule,
-  NgxPaginationModule
-
+  NgxPaginationModule,
+  MatProgressSpinnerModule
 ]
 
 @NgModule({

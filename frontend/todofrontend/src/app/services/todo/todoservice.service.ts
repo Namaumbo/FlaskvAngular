@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { HttpService } from '../http/http.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { DOCUMENT } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,10 +13,25 @@ export class TodoserviceService {
   public todoTitle = "";
   public todoDescription = "";
   public condition = true;
+  public successfulDelete = false;
+  public successfulUpdate = false
+
 
 
   totalpages: any = 0
   userData: any = [];
+
+
+  incompleteItems: any = [];
+  totalIncompleteList: any = 0
+  totalIncompleteItems: any = 0
+  incompletePage: any = 1
+
+
+  completeItems: any = [];
+  totalCompletedList: any = 0
+  totalCompleteItems: any = 0
+  completedPage: any = 1
 
   public done_count = 0
   public todo_count = 0
@@ -27,7 +43,6 @@ export class TodoserviceService {
   page = 1
   buttonArray: any
 
-
   public searchValue: string = ''
   public searchResults: any = []
   public searchPage = 1
@@ -37,10 +52,10 @@ export class TodoserviceService {
   public totalCompleteSearchedItems = 0
   public totalIncompleteSearchItems = 0
   public searchActiveCondition = false
-  public pages : any = []
+  public pages: any = []
+  public noItemErr : string = ''
 
-
-  constructor(public HttpClient: HttpService, @Inject(DOCUMENT) private dom: Document) { }
+  constructor(public HttpClient: HttpService, public router: Router ) { }
   setUserData(data: any) {
     this.userData = data
   }
@@ -66,7 +81,7 @@ export class TodoserviceService {
     }
     return this.HttpClient.post('add-todo', body).subscribe({
       next: ((res: any) => {
-        if (res.items.length > 0) this.getUserList()
+        if (res.items.length > 0) this.getTodoList()
       }),
       error: (err => {
         console.log(err)
@@ -74,7 +89,7 @@ export class TodoserviceService {
     })
   }
 
-  getUserList() {
+  getTodoList() {
     this.HttpClient.get('get-todo', this.limit, this.page).subscribe((resp: any) => {
       if (resp.items.length == 0) {
         this.setUserData(resp.todos)
@@ -82,26 +97,88 @@ export class TodoserviceService {
         this.statistics()
       }
 
-      this.setUserData(resp.items.reverse())
+      this.setUserData(resp.items)
       this.page = resp.pagination.page
-      setTimeout(()=>{
-        this.totalpages = this.pagination(this.page,resp.pagination.totalPages)
-        console.log(resp.items)
-      },500)
+      setTimeout(() => {
+        this.totalpages = this.pagination(this.page, resp.pagination.totalPages)
+      }, 500)
       this.totalItems = resp.totalItems
       this.checkUndone()
       this.statistics()
     })
   }
 
+
+
+  getIncompleteList() {
+    this.HttpClient.get('get-incomplete', this.limit, this.incompletePage).subscribe((res: any) => {
+      if (res.items.length > 0) {
+        this.incompleteItems = res.items
+        this.totalIncompleteItems = res.totalNumber
+        setTimeout(() => {
+          this.totalIncompleteList = this.pagination(this.incompletePage, res.pagination.totalPages)
+        }, 500)
+      }
+    })
+
+  }
+
+  handleNextIncompletePage(): any {
+    this.incompletePage = this.incompletePage + 1
+    this.getIncompleteList()
+
+  }
+
+  handlePreviousIncompletePage(): any {
+    this.incompletePage = this.incompletePage - 1
+    this.getIncompleteList()
+
+  }
+  currentIncompletePage(page: number) {
+    window.scrollTo(0, 300);
+    this.incompletePage = page
+    this.getIncompleteList()
+  }
+
+  handleNextCompletePage(): any {
+    this.completedPage = this.completedPage + 1
+    this.getCompleteList()
+
+  }
+
+  handlePreviousCompletePage(): any {
+    this.completedPage = this.completedPage - 1
+    this.getCompleteList()
+
+  }
+
+  currentCompletePage(page: number) {
+    window.scrollTo(0, 100);
+    this.completedPage = page
+    this.getCompleteList()
+  }
+
+  getCompleteList() {
+    this.HttpClient.get('get-done', this.limit, this.completedPage).subscribe((res: any) => {
+      if (res.items.length > 0) {
+        this.completeItems = res.items
+        setTimeout(() => {
+          this.totalCompletedList = this.pagination(this.completedPage, res.pagination.totalPages)
+        }, 500)
+      }
+      this.totalCompleteItems = res.totalNumber
+
+    })
+  }
+
   handleNext = async () => {
     this.page = this.page + 1
-    this.getUserList()
+    this.getTodoList()
   }
 
   handlePrevious(): any {
     this.page = this.page - 1
-    this.getUserList()
+    this.getTodoList()
   }
 
   handleNextSearchPage = () => {
@@ -113,26 +190,47 @@ export class TodoserviceService {
     this.handleSearch()
   }
 
-  public deleteTodo(id: string) {
+  deleteTodo(id: string) {
     if (confirm("Are you sure you want to delete this item?")) {
+      this.successfulDelete = true
       this.HttpClient.delete(`delete-todo/${id}`).subscribe({
         next: ((res: any) => {
-          if (res.items.length > 0) this.getUserList()
+          if (res.items.length > 0) {
+            // this.searchResults = res.item
+            this.getTodoList()
+            this.getCompleteList()
+            this.getIncompleteList()
+          }
+          this.successfulDelete = false
+          
           this.statistics()
-
+          alert('successfully deleted')
+          this.handleSearch()
         }),
         error: (err => {
+          this.noItemErr = 'dsfs'
           console.log(err)
         })
 
       })
+
     }
   }
 
+
   completeToDo(id: string) {
+    this.successfulUpdate = true
     this.HttpClient.update(`complete-todo/${id}`, '').subscribe({
       next: ((res: any) => {
-        if (res.items.length > 0) this.getUserList()
+        if (res.items.length > 0) {
+          this.successfulUpdate = false
+          // this.searchResults = res.items
+          this.getTodoList()
+          this.getCompleteList()
+          this.getIncompleteList()
+          this.handleSearch()
+
+        }
       }), error: (err => {
         console.log(err)
       })
@@ -140,10 +238,18 @@ export class TodoserviceService {
   }
 
   undoTodo(id: string) {
-
+    this.successfulUpdate = true
     this.HttpClient.update(`undo-todo/${id}`, '').subscribe({
       next: ((res: any) => {
-        if (res.items.length > 0) this.getUserList()
+        if (res.items.length > 0) {
+          this.successfulUpdate = false
+          // this.searchResults = res.items
+          this.getTodoList()
+          this.getCompleteList()
+          this.getIncompleteList()
+          this.handleSearch()
+        
+        }
       }),
       error: (err => {
         console.log(err)
@@ -161,29 +267,50 @@ export class TodoserviceService {
   }
 
 
-  handleSearch() {
-    let body = {
-      'title': this.searchValue
+ handleSearchInput(): boolean{
+    let condn : boolean = false
+
+    if(this.searchValue.length  == 0){
+      alert('search input empty')
+      condn = true
+    } 
+    else{
+      this.router.navigate(['/search'])
     }
-    
-    setTimeout(()=>{
-      this.pages = this.pagination(this.searchPage,this.totalNumberOfPages)
-    },500)
-
-    this.HttpClient.search('search-todo', body, this.searchLimit, this.searchPage).subscribe({
-      next: ((res: any) => {
-        console.log(res.pagination['page'])
-        this.searchResults = res.items
-        this.totalSearchedItems = res.numberOfItems
-        this.totalNumberOfPages = res.pagination['totalPages']
-        // this.buttonArray = Array.from({ length: this.totalNumberOfPages }, (_, index) => index + 1);
-
-      }),
-      error: ((err: any) => {
-        console.log(err)
-      })
-    })
+    return condn
   }
+
+  handleSearch() {
+ 
+      let body = {
+        'title': this.searchValue.trim()
+      }
+      setTimeout(() => {
+        this.pages = this.pagination(this.searchPage, this.totalNumberOfPages)
+      }, 500)
+  
+      this.HttpClient.search('search-todo', body, this.searchLimit, this.searchPage).subscribe({
+        next: ((res: any) => {
+          
+          this.searchResults = res.items
+          if(res.items.length > 0){
+            this.totalSearchedItems = res.numberOfItems
+            this.totalNumberOfPages = res.pagination['totalPages']
+  
+          }
+          else{
+            this.noItemErr = 'No Item with that name'
+  
+          }
+  
+        }),
+        error: ((err: any) => {
+          this.noItemErr = err.error.massage
+        })
+      })  
+
+  
+}
 
   handleSearchAndOriginal(): boolean {
     if (this.searchValue.length) {
@@ -201,13 +328,13 @@ export class TodoserviceService {
     this.handleSearch()
   }
 
-  currentPage(page: number){
+  currentPage(page: number) {
     window.scrollTo(0, 300);
     this.page = page
-    this.getUserList()
+    this.getTodoList()
   }
 
- pagination(c: any, m: any) {
+  pagination(c: any, m: any) {
     let current = c
     let last = m
     let delta = 2
@@ -234,7 +361,9 @@ export class TodoserviceService {
       rangeWithDots.push(i);
       l = i;
     }
-   
+
     return rangeWithDots;
   }
+
+
 }

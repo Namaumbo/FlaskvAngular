@@ -1,60 +1,41 @@
 <div class="stats">
-  <h3>Total number of completed tasks : {{ this.todo.doneList.length }}</h3>
+  <h3>Total number of completed tasks : {{ this.todo.totalCompleteItems }}</h3>
 </div>
-<!-- <div>
-  <div class="wrapper">
-    <div>
-      <ul>
-        <li *ngFor="let i of this.todo.userData">
-          <div class="card" *ngIf="i['completed']">
-            <div class="card-body">
-              <div id="span">
-                <span>
-                  <span class="title">Title :</span>
-                  {{ i["title"] }}
-                  <br />
-                  <span *ngIf="i.show">
-                    <hr />
-                    <span class="title">Description:</span>
-                    <span id="desc"> {{ i["description"] }}</span>
-                  </span>
-                </span>
-              </div>
-              <div class="btns">
-                <ul>
-                  <li>
-                    <button type="button" class="btn btn-success btn-sm"
-                      (click)="this.todo.undoTodo(i['id'])">
-                      Undo
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" class="btn btn-primary btn-sm" (click)="i.show = !i.show">
-                      <span *ngIf="i.show">Hide</span>
-                      <span *ngIf="!i.show">Show</span>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" class="btn btn-danger btn-sm" (click)="this.todo.deleteTodo(i['id'])">
-                      Delete
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
+
+
+  <!------------------ deleting with a delete message -------------------------->
+  <div class="delete-spinner" *ngIf="this.todo.successfulDelete">
+    <div class="loader d-flex justify-content-center align-items-center">
+      <div
+        class="spinner-border text-secondary"
+        style="width: 15rem; height: 15rem"
+        role="status"
+      >
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <h2 class="message">Deleting Item</h2>
     </div>
   </div>
-</div> -->
+
+<div class="delete-spinner" *ngIf="this.todo.successfulUpdate">
+  <div class="loader d-flex justify-content-center align-items-center">
+    <div
+      class="spinner-border text-secondary"
+      style="width: 15rem; height: 15rem"
+      role="status"
+    >
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <h2 class="message">Updating Item</h2>
+  </div>
+</div>
 
 <table>
   <tr>
     <th class="titles">Items</th>
     <th class="titles">Actions</th>
   </tr>
-  <tbody *ngFor="let item of this.todo.userData">
+  <tbody *ngFor="let item of this.todo.completeItems">
     <tr *ngIf="item['completed']">
       <td class="titles">
         <span>{{ item.title }}</span>
@@ -97,6 +78,41 @@
     </tr>
   </tbody>
 </table>
+
+<div class="navs">
+  <nav>
+    <ul class="pagination">
+      <li
+        class="page-item"
+        *ngIf="this.todo.completedPage > 1"
+        (click)="[this.todo.handlePreviousCompletePage()]"
+      >
+        <a class="page-link" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item" *ngFor="let number of this.todo.totalCompletedList">
+        <a
+          class="page-link"
+          (click)="this.todo.currentCompletePage(number)"
+          *ngIf="this.todo.completedPage == number; else block"
+          ngClass="active"
+          >{{ number }}</a
+        >
+        <ng-template #block>
+          <a class="page-link" (click)="this.todo.currentCompletePage(number)">
+            <span>{{ number }}</span>
+          </a>
+        </ng-template>
+      </li>
+      <li class="page-item" (click)="[this.todo.handleNextCompletePage()]">
+        <a class="page-link" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
 
 <div
   class="modal fade"

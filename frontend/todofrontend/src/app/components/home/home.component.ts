@@ -28,28 +28,8 @@ export class HomeComponent implements OnInit {
   constructor(public todo: TodoserviceService) {
   }
   ngOnInit() {
-<<<<<<< HEAD
-    this.todo.getUserList()
+    this.todo.getTodoList()
     
-=======
-    setTimeout(() => {
-
-      if (this.todo.userData.length > 0) {
-        console.log('refreshing')
-        this.refreshPage()
-      }
-    }, 2000);
-  }
-
-
-  refreshPage() {
-    // console.log(this.todo.userData)
-    this.dataSource = new MatTableDataSource()
-    this.dataSource = new MatTableDataSource<todo>(this.todo.userData)
-    this.dataSource.paginator = this.paginator;
-    // console.log( this.dataSource)
-
->>>>>>> 1fe58478cd84d01bbaa10eec56501b9f4b977823
   }
 
   checkEnter() {

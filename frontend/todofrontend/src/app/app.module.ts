@@ -17,6 +17,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatBadgeModule} from '@angular/material/badge';
 import { TodosComponent } from './todos/todos.component';
 import { MaterialModule } from './material/material.module';
+import { SearchComponent } from './components/search/search.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { MaterialModule } from './material/material.module';
     HomeComponent,
     LoginComponent,
     NotfoundComponent,
-    TodosComponent
+    TodosComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,
