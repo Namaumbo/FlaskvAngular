@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { TodoserviceService } from './todoservice.service';
+import { WavesService } from './waves.service';
 
-describe('TodoserviceService', () => {
-  let service: TodoserviceService;
+describe('WavesService', () => {
+  let service: WavesService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(TodoserviceService);
+    service = TestBed.inject(WavesService);
   });
 
   it('should be created', () => {

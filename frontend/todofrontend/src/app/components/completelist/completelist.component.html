@@ -1,131 +1,15 @@
-<div class="stats">
-  <h3>Total number of completed tasks : {{ this.todo.doneList.length }}</h3>
-</div>
-<!-- <div>
-  <div class="wrapper">
-    <div>
-      <ul>
-        <li *ngFor="let i of this.todo.userData">
-          <div class="card" *ngIf="i['completed']">
-            <div class="card-body">
-              <div id="span">
-                <span>
-                  <span class="title">Title :</span>
-                  {{ i["title"] }}
-                  <br />
-                  <span *ngIf="i.show">
-                    <hr />
-                    <span class="title">Description:</span>
-                    <span id="desc"> {{ i["description"] }}</span>
-                  </span>
-                </span>
-              </div>
-              <div class="btns">
-                <ul>
-                  <li>
-                    <button type="button" class="btn btn-success btn-sm"
-                      (click)="this.todo.undoTodo(i['id'])">
-                      Undo
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" class="btn btn-primary btn-sm" (click)="i.show = !i.show">
-                      <span *ngIf="i.show">Hide</span>
-                      <span *ngIf="!i.show">Show</span>
-                    </button>
-                  </li>
-                  <li>
-                    <button type="button" class="btn btn-danger btn-sm" (click)="this.todo.deleteTodo(i['id'])">
-                      Delete
-                    </button>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div> -->
-
-<table>
-  <tr>
-    <th class="titles">Items</th>
-    <th class="titles">Actions</th>
-  </tr>
-  <tbody *ngFor="let item of this.todo.userData">
-    <tr *ngIf="item['completed']">
-      <td class="titles">
-        <span>{{ item.title }}</span>
-      </td>
-      <td>
-        <div class="btns">
-          <ul>
-            <li>
-              <button
-                type="button"
-                class="btn btn-success btn-bg"
-                (click)="this.todo.undoTodo(item['id'])"
-              >
-                Undo
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                class="btn btn-primary"
-                data-bs-toggle="modal"
-                data-bs-target="#exampleModal"
-                (click)="this.todo.handleModal(item)"
-              >
-                <span>Show</span>
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                class="btn btn-danger btn-bg"
-                (click)="this.todo.deleteTodo(item['id'])"
-              >
-                Delete
-              </button>
-            </li>
-          </ul>
-        </div>
-      </td>
+<div class="main">
+  <table>
+    <tr>
+      <th>Account number</th>
+      <th>Errors</th>
+    </tr>
+    <tbody *ngFor="let item of this.waves.report"> 
+    <tr>
+     <td>{{item['account_number']}}</td> 
+     <td>{{item['error']}}</td>
     </tr>
   </tbody>
-</table>
-
-<div
-  class="modal fade"
-  id="exampleModal"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Todo Details</h1>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        ></button>
-      </div>
-      <div class="modal-body">
-        <h4 id="title"></h4>
-        <hr />
-        <p id="description"></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
+  </table>
 </div>
+

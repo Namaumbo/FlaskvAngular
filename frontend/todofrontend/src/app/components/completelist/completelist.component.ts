@@ -1,17 +1,16 @@
-import { Component } from '@angular/core';
-import { TodoserviceService } from '../../services/todo/todoservice.service';
+import { Component, OnInit } from '@angular/core';
+import { WavesService } from 'src/app/services/wave/waves.service';
 
 @Component({
   selector: 'app-completelist',
   templateUrl: './completelist.component.html',
   styleUrls: ['./completelist.component.scss']
 })
-export class CompletelistComponent {
-
-
-  constructor(public todo: TodoserviceService) { }
+export class CompletelistComponent implements OnInit {
+  constructor(public waves : WavesService){}
 
   ngOnInit() {
-    // this.todo.getUserList()
+    this.waves.getReport()
   }
+
 }
