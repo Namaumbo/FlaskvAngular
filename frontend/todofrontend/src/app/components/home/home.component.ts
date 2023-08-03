@@ -1,6 +1,5 @@
 import { Component, OnInit,  Inject} from '@angular/core';
 import { TodoserviceService } from '../../services/todo/todoservice.service';
-import { DOCUMENT } from '@angular/common';
 
 export interface todo {
   userId: number,
